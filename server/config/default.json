@@ -1,0 +1,9 @@
+{
+    "PORT": 7777,
+    "SERVER": "localhost",
+    "DATABASE": "wedding_planner",
+    "USER": "root",
+    "PASSWORD": "manager",
+    "jwtSecret": "wedplan"
+  }
+  
