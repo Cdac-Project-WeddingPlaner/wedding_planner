@@ -12,8 +12,32 @@ const pool = mysql.createPool({
     database: config.get('DATABASE')
 });
 
+router.get('/', authenticateUser, (req, res) => {
+    // Check if the user has admin privileges
+    if (req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+    }
+
+    const sql = 'SELECT * FROM VendorView';
+
+    pool.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+
+        res.status(200).json(results);
+    });
+});
+
 // Get vendor profile route using the VendorView
-router.get('/:vendor_id', (req, res) => {
+router.get('/:vendor_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a vendor or admin
+    if (req.user_type !== 'vendor' && req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Vendor or admin access required.' });
+    }
+
     const vendorId = req.params.vendor_id;
 
     // SQL query to retrieve vendor profile information using the VendorView
@@ -40,9 +64,20 @@ router.get('/:vendor_id', (req, res) => {
 });
 
 
+
 // Update vendor information route
-router.put('/:vendor_id', (req, res) => {
+router.put('/:vendor_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a vendor
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Vendor access required.' });
+    }
     const vendorId = req.params.vendor_id;
+
+    if (req.user_id !== vendorId) {
+        return res.status(403).json({ error: 'Forbidden. Vendor access required.' });
+    }
+
+    
     const {
         email,
         password,
@@ -89,6 +124,7 @@ router.put('/:vendor_id', (req, res) => {
         }
     );
 });
+
 
 
 module.exports = router;

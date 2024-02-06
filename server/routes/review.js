@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
@@ -13,7 +14,12 @@ const pool = mysql.createPool({
 });
 
 // Create a review
-router.post('/', (req, res) => {
+router.post('/', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { plan_id, client_id, review } = req.body;
 
     const sql = 'INSERT INTO reviews (plan_id, client_id, review) VALUES (?, ?, ?)';
@@ -28,6 +34,7 @@ router.post('/', (req, res) => {
         res.status(201).send('Review created successfully');
     });
 });
+
 
 // Get all reviews
 router.get('/', (req, res) => {
@@ -119,7 +126,12 @@ router.get('/vendor/:vendor_id', (req, res) => {
 });
 
 // Update a review
-router.put('/:review_id', (req, res) => {
+router.put('/:review_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const reviewId = req.params.review_id;
     const { review } = req.body;
 
@@ -141,7 +153,12 @@ router.put('/:review_id', (req, res) => {
 });
 
 // Delete a review
-router.delete('/:review_id', (req, res) => {
+router.delete('/:review_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const reviewId = req.params.review_id;
     const sql = 'DELETE FROM reviews WHERE review_id = ?';
 
@@ -160,4 +177,6 @@ router.delete('/:review_id', (req, res) => {
     });
 });
 
+
 module.exports = router;
+

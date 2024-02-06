@@ -51,7 +51,7 @@ VALUES
 INSERT INTO halls (vendor_id, hall_name, capacity, address, rental_fee, amenities, is_verified)
 VALUES
     (1, 'Dream Hall A', 200, '123 Street, City', 5000.00, 'Air Conditioning, Parking', 1),
-    (1, 'Elegant Hall B', 150, '202 Lane, City', 4500.00, 'Decoration, Sound System', 1)
+    (1, 'Elegant Hall B', 150, '202 Lane, City', 4500.00, 'Decoration, Sound System', 1);
 
 
 -- Insert sample data for Plans table(vendor-admin)
