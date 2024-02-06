@@ -12,8 +12,12 @@ const pool = mysql.createPool({
     database: config.get('DATABASE')
 });
 
-// Get all clients with user information using the ClientView
-router.get('/', (req, res) => {
+router.get('/', authenticateUser, (req, res) => {
+    // Check if the user has admin privileges
+    if (req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+    }
+
     const sql = 'SELECT * FROM ClientView';
 
     pool.query(sql, (err, results) => {
@@ -28,8 +32,13 @@ router.get('/', (req, res) => {
 });
 
 // Get a specific client by ID with user information using the ClientView
-router.get('/:client_id', (req, res) => {
+router.get('/:client_id', authenticateUser, (req, res) => {
     const clientId = req.params.client_id;
+
+    // Check if the user is either an admin or the requested client
+    if (req.user_type !== 'admin' && req.user_id !== clientId) {
+        return res.status(403).json({ error: 'Forbidden. Insufficient privileges.' });
+    }
 
     const sql = 'SELECT * FROM ClientView WHERE client_id = ?';
 
@@ -48,10 +57,16 @@ router.get('/:client_id', (req, res) => {
     });
 });
 
+
 // Update a client by ID with user information
-router.put('/:client_id', (req, res) => {
+router.put('/:client_id', authenticateUser, (req, res) => {
     const clientId = req.params.client_id;
     const { email, password, phone_number, first_name, last_name, address } = req.body;
+
+    // Check if the authenticated user is the same as the client being updated
+    if (req.user_id !== clientId) {
+        return res.status(403).json({ error: 'Forbidden. You can only update your own information.' });
+    }
 
     const updateUserSql = `
         UPDATE users
@@ -113,6 +128,7 @@ router.put('/:client_id', (req, res) => {
         });
     });
 });
+
 
 
 

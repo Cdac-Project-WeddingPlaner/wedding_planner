@@ -13,7 +13,13 @@ const pool = mysql.createPool({
 });
 
 // Get All Wedding Plan Selections using the weddingselection view
-router.get('/', (req, res) => {
+router.get('/',authenticateUser, (req, res) => {
+
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+    }
+
     const sql = 'SELECT * FROM weddingselection';
 
     pool.query(sql, (err, results) => {
@@ -28,7 +34,7 @@ router.get('/', (req, res) => {
 });
 
 // Get Wedding Plan Selection by ID using the weddingselection view
-router.get('/:selection_id', (req, res) => {
+router.get('/:selection_id',authenticateUser, (req, res) => {
     const selectionId = req.params.selection_id;
 
     const sql = 'SELECT * FROM weddingselection WHERE selection_id = ?';
@@ -49,7 +55,12 @@ router.get('/:selection_id', (req, res) => {
 });
 
 // Create Wedding Plan Selection
-router.post('/', (req, res) => {
+router.post('/', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { wd_id } = req.body;
 
     pool.query(
@@ -69,7 +80,12 @@ router.post('/', (req, res) => {
 });
 
 // Update Wedding Plan Selection date and time
-router.put('/update', (req, res) => {
+router.put('/update', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { selection_id, plan_id, date, time } = req.body;
 
     pool.query(
@@ -91,10 +107,13 @@ router.put('/update', (req, res) => {
     );
 });
 
-
-
 // Add Plan to Wedding Plan Selection with status pending, date, and time
-router.post('/plans', (req, res) => {
+router.post('/plans', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { selection_id, plan_id, date, time } = req.body;
 
     pool.query(
@@ -112,10 +131,13 @@ router.post('/plans', (req, res) => {
     );
 });
 
-
-
 // Delete Wedding Plan Selection by ID with all associated plans
-router.delete('/:selection_id', (req, res) => {
+router.delete('/:selection_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const selectionId = req.params.selection_id;
 
     const deletePlansSql = 'DELETE FROM weddingPlanSelections_Plans WHERE selection_id = ?';
@@ -174,8 +196,14 @@ router.delete('/:selection_id', (req, res) => {
     });
 });
 
+
 // Get Wedding Plan Selections by Vendor ID using the weddingselection view
-router.get('/vendor/:vendor_id', (req, res) => {
+router.get('/vendor/:vendor_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a vendor
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Vendor access required.' });
+    }
+
     const vendorId = req.params.vendor_id;
 
     const sql = 'SELECT * FROM weddingselection WHERE vendor_id = ?';
@@ -191,8 +219,13 @@ router.get('/vendor/:vendor_id', (req, res) => {
     });
 });
 
-// Get Wedding Plan Selections by Client ID using the weddingselection view
-router.get('/client/:client_id', (req, res) => {
+
+router.get('/client/:client_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client or admin
+    if (req.user_type !== 'client' && req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Client or admin access required.' });
+    }
+
     const clientId = req.params.client_id;
 
     const sql = `
@@ -217,8 +250,14 @@ router.get('/client/:client_id', (req, res) => {
     });
 });
 
+
 // Delete Plan Selection from Wedding Plan Selections
-router.delete('/p/plans', (req, res) => {
+router.delete('/p/plans', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { selection_id, plan_id } = req.body;
 
     console.log('Request Body:', req.body);
@@ -240,7 +279,5 @@ router.delete('/p/plans', (req, res) => {
         }
     );
 });
-
-
 
 module.exports = router;
