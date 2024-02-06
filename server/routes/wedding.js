@@ -13,10 +13,15 @@ const pool = mysql.createPool({
 });
 
 // Create Wedding
-router.post('/', (req, res) => {
+router.post('/', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const weddingData = req.body;
 
-    pool.query('INSERT INTO weddingDetils SET ?', weddingData, (err, result) => {
+    pool.query('INSERT INTO weddingDetails SET ?', weddingData, (err, result) => {
         if (err) {
             console.error('Error creating wedding:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -27,9 +32,15 @@ router.post('/', (req, res) => {
     });
 });
 
+
 // Get All Weddings
-router.get('/', (req, res) => {
-    pool.query('SELECT * FROM weddingDetils', (err, results) => {
+router.get('/', authenticateUser, (req, res) => {
+    // Check if the authenticated user is an admin
+    if (req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+    }
+
+    pool.query('SELECT * FROM weddingDetails', (err, results) => {
         if (err) {
             console.error('Error getting all weddings:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -40,11 +51,12 @@ router.get('/', (req, res) => {
     });
 });
 
+
 // Get Wedding by Client ID
-router.get('/client/:clientId', (req, res) => {
+router.get('/client/:clientId', authenticateUser, (req, res) => {
     const { clientId } = req.params;
 
-    pool.query('SELECT * FROM weddingDetils WHERE client_id = ?', [clientId], (err, results) => {
+    pool.query('SELECT * FROM weddingDetails WHERE client_id = ?', [clientId], (err, results) => {
         if (err) {
             console.error('Error getting wedding by client ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -55,8 +67,9 @@ router.get('/client/:clientId', (req, res) => {
     });
 });
 
+
 // Get Wedding by ID
-router.get('/:weddingId', (req, res) => {
+router.get('/:weddingId', authenticateUser,(req, res) => {
     const { weddingId } = req.params;
 
     pool.query('SELECT * FROM weddingDetils WHERE wd_id = ?', [weddingId], (err, results) => {
@@ -76,11 +89,16 @@ router.get('/:weddingId', (req, res) => {
 });
 
 // Update Wedding by ID
-router.put('/:weddingId', (req, res) => {
+router.put('/:weddingId', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { weddingId } = req.params;
     const updatedData = req.body;
 
-    pool.query('UPDATE weddingDetils SET ? WHERE wd_id = ?', [updatedData, weddingId], (err) => {
+    pool.query('UPDATE weddingDetails SET ? WHERE wd_id = ?', [updatedData, weddingId], (err) => {
         if (err) {
             console.error('Error updating wedding by ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -92,10 +110,15 @@ router.put('/:weddingId', (req, res) => {
 });
 
 // Delete Wedding by ID
-router.delete('/:weddingId', (req, res) => {
+router.delete('/:weddingId', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client
+    if (req.user_type !== 'client') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
     const { weddingId } = req.params;
 
-    pool.query('DELETE FROM weddingDetils WHERE wd_id = ?', [weddingId], (err) => {
+    pool.query('DELETE FROM weddingDetails WHERE wd_id = ?', [weddingId], (err) => {
         if (err) {
             console.error('Error deleting wedding by ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -105,5 +128,6 @@ router.delete('/:weddingId', (req, res) => {
         res.status(200).json({ message: 'Wedding deleted' });
     });
 });
+
 
 module.exports = router;

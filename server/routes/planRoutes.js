@@ -13,12 +13,17 @@ const pool = mysql.createPool({
 });
 
 // Create a new plan
-router.post('/', (req, res) => {
+router.post('/', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a vendor
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Vendor access required.' });
+    }
+
     const { vendor_id, title, description, price } = req.body;
 
     pool.query(
         'INSERT INTO plans (vendor_id, title, description, price, is_verified) VALUES (?, ?, ?, ?, ?)',
-        [vendor_id, title, description, price, "pending"],
+        [vendor_id, title, description, price, 'pending'],
         (err, results) => {
             if (err) {
                 console.error(err);
@@ -31,6 +36,7 @@ router.post('/', (req, res) => {
         }
     );
 });
+
 
 // Get all plans
 router.get('/', (req, res) => {
@@ -65,7 +71,12 @@ router.get('/:plan_id', (req, res) => {
 });
 
 // Update a plan by ID
-router.put('/:plan_id', (req, res) => {
+router.put('/:plan_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a vendor
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Vendor access required.' });
+    }
+
     const planId = req.params.plan_id;
     const { title, description, price, is_verified } = req.body;
 
@@ -88,8 +99,14 @@ router.put('/:plan_id', (req, res) => {
     );
 });
 
+
 // Delete a plan by ID
-router.delete('/:plan_id', (req, res) => {
+router.delete('/:plan_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a vendor
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Vendor access required.' });
+    }
+
     const planId = req.params.plan_id;
 
     pool.query('DELETE FROM plans WHERE plan_id = ?', [planId], (err, results) => {
@@ -106,6 +123,7 @@ router.delete('/:plan_id', (req, res) => {
         }
     });
 });
+
 
 // Get verified plans
 router.get('/v/v', (req, res) => {
@@ -124,6 +142,7 @@ router.get('/v/v', (req, res) => {
     });
 });
 
+// Get plans by vendor id
 router.get('/vendor/:vendor_id', (req, res) => {
     const vendorId = req.params.vendor_id;
 
@@ -139,7 +158,12 @@ router.get('/vendor/:vendor_id', (req, res) => {
 });
 
 // Change Plan Status by ID
-router.patch('/:plan_id', (req, res) => {
+router.patch('/:plan_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is an admin
+    if (req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+    }
+
     const planId = req.params.plan_id;
     const { is_verified } = req.body;
 
@@ -161,6 +185,7 @@ router.patch('/:plan_id', (req, res) => {
         }
     );
 });
+
 
 // Get Plans by Vendor Service Type
 router.get('/service/:serviceType', (req, res) => {
