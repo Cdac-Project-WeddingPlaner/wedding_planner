@@ -1,0 +1,66 @@
+/* Login.css */
+.login-body {
+    background-image: url('resourses/loginBG.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    height: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-container {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #eb98c469;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+   
+  }
+  
+  .logo {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    color: #FF1493;
+  }
+  
+  .input-field {
+    margin-bottom: 15px;
+    margin-right: 15px;
+  }
+  
+  .input-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #FF1493;
+    border-radius: 4px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 15px;
+  }
+  
+  .login-button,
+  .cancel-button {
+    background-color: #FF1493;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #FF1493;
+    text-decoration: none;
+  }
+  

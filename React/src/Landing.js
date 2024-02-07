@@ -1,19 +1,49 @@
-// Landing.js
+// Akash
 
-import React from 'react';
-import { Link, Switch, Route, useHistory } from 'react-router-dom';
-import Home from './Homemain';
-import Profile from './Profile';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import Routes from './utils/Routes';
+import Navigation from './utils/Navigation';
+
 import logo from './resourses/logo.png';
-import NotFound from './NotFound';
-import Login from './Login'; 
-import './Landing.css'; 
+
+import './Landing.css';
 
 function Landing() {
   const history = useHistory();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userInSession = sessionStorage.getItem('user');
+    if (userInSession) {
+      setUser(JSON.parse(userInSession));
+    }
+
+    // Add event listener for route changes
+    const unlisten = history.listen(() => {
+      // Refresh the page on route change
+      window.location.reload();
+    });
+
+    // Cleanup the event listener when the component unmounts
+    return () => unlisten();
+  }, [history]);
 
   const handleLoginClick = () => {
-    // Navigate to the login page when the "Log in" button is clicked
+    const userInSession = sessionStorage.getItem('user');
+
+    if (userInSession) {
+      sessionStorage.removeItem('user');
+      setUser(null);
+      history.push('/login');
+    } else {
+      history.push('/login');
+    }
+  };
+
+  const handleLogoutClick = () => {
+    sessionStorage.removeItem('user');
+    setUser(null);
     history.push('/login');
   };
 
@@ -29,27 +59,26 @@ function Landing() {
               <h1 className="title">Tie The Knot</h1>
             </div>
             <div className="get-app-button">
-              <button onClick={handleLoginClick}>Log in</button>
+              <button onClick={user ? handleLogoutClick : handleLoginClick}>
+                {user ? 'Logout' : 'Log in'}
+              </button>
               &nbsp;
               <button>Get App</button>
+              {user && (
+                <div className="user-info">
+                  <p>{user.user_type} : {`${user.first_name} ${user.last_name}`}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </header>
 
-      <nav className="navigation">
-        <div className="ex-margin">
-          <Link to="/home">Home</Link> {" | "}
-          <Link to="/profile">Profile</Link> {" | "}
-        </div>
-      </nav>
+      <Navigation user={user} />
 
-      <Switch>
-        <Route path="/home" exact component={Home} />
-        <Route path="/profile" exact component={Profile} />
-        <Route path="/login" exact component={Login} /> {/* Use the Login component for the /login route */}
-        <Route path="*" exact component={NotFound} />
-      </Switch>
+      <div>
+        <Routes />
+      </div>
 
       <footer className="footer">
         <div className="ex-margin">
