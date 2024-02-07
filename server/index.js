@@ -1,6 +1,6 @@
 const express = require('express');
 const config = require('config');
-
+const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const vendorRoutes = require('./routes/vendorRoutes');
 const planRoutes = require('./routes/planRoutes');
@@ -11,6 +11,7 @@ const clientRoutes = require('./routes/client');
 const weddingSelectionRoutes = require('./routes/weddingSelection');
 
 const app = express();
+app.use(cors())
 const port = config.get('PORT') || 3000;
 
 app.use(express.json()); // Use the built-in JSON parser

@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
@@ -179,4 +178,3 @@ router.delete('/:review_id', authenticateUser, (req, res) => {
 
 
 module.exports = router;
-

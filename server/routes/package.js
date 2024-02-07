@@ -13,33 +13,45 @@ const pool = mysql.createPool({
 });
 
 // Add Package
-router.post('/', (req, res) => {
+router.post('/', authenticateUser, (req, res) => {
+  // Check if the authenticated user is an admin
+  if (req.user_type !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+  }
+
   const { packagename } = req.body;
 
   pool.query('INSERT INTO package (packagename) VALUES (?)', [packagename], (err, result) => {
-    if (err) {
-      console.error('Error adding package:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-      return;
-    }
-    res.status(201).json({ packageId: result.insertId, packagename });
+      if (err) {
+          console.error('Error adding package:', err);
+          res.status(500).json({ error: 'Internal Server Error' });
+          return;
+      }
+      res.status(201).json({ packageId: result.insertId, packagename });
   });
 });
+
 
 
 // Delete Package (including associated plans)
-router.delete('/:packageId', (req, res) => {
+router.delete('/:packageId', authenticateUser, (req, res) => {
+  // Check if the authenticated user is an admin
+  if (req.user_type !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+  }
+
   const { packageId } = req.params;
 
   pool.query('DELETE FROM package WHERE package_id = ?', [packageId], err => {
-    if (err) {
-      console.error('Error deleting package:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-      return;
-    }
-    res.status(200).json({ message: 'Package deleted' });
+      if (err) {
+          console.error('Error deleting package:', err);
+          res.status(500).json({ error: 'Internal Server Error' });
+          return;
+      }
+      res.status(200).json({ message: 'Package deleted' });
   });
 });
+
 
 
 // Get All Packages with Plans
@@ -125,67 +137,73 @@ router.get('/:packageId', (req, res) => {
 
 
 // Update Plans in Package
-router.put('/:packageId', (req, res) => {
-    const { packageId } = req.params;
-    const newPlans = req.body.newPlans;
-  
-    if (!Array.isArray(newPlans) || newPlans.length === 0) {
+router.put('/:packageId', authenticateUser, (req, res) => {
+  // Check if the authenticated user is an admin
+  if (req.user_type !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+  }
+
+  const { packageId } = req.params;
+  const newPlans = req.body.newPlans;
+
+  if (!Array.isArray(newPlans) || newPlans.length === 0) {
       return res.status(400).json({ error: 'Invalid or empty newPlans array in the request body' });
-    }
-  
-    pool.getConnection((err, connection) => {
+  }
+
+  pool.getConnection((err, connection) => {
       if (err) {
-        console.error('Error getting connection from pool:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-        return;
-      }
-  
-      connection.beginTransaction((err) => {
-        if (err) {
-          connection.release();
-          console.error('Error starting transaction:', err);
+          console.error('Error getting connection from pool:', err);
           res.status(500).json({ error: 'Internal Server Error' });
           return;
-        }
-  
-        // Delete existing plans
-        connection.query('DELETE FROM plan_package WHERE package_id = ?', [packageId], (err) => {
+      }
+
+      connection.beginTransaction((err) => {
           if (err) {
-            return connection.rollback(() => {
               connection.release();
-              console.error('Error deleting plans from package:', err);
+              console.error('Error starting transaction:', err);
               res.status(500).json({ error: 'Internal Server Error' });
-            });
+              return;
           }
-  
-          // Add new plans
-          const values = newPlans.map(plan => [plan.planId, packageId]);
-  
-          connection.query('INSERT INTO plan_package (plan_id, package_id) VALUES ?', [values], (err) => {
-            if (err) {
-              return connection.rollback(() => {
-                connection.release();
-                console.error('Error adding new plans to package:', err);
-                res.status(500).json({ error: 'Internal Server Error' });
-              });
-            }
-  
-            connection.commit((err) => {
+
+          // Delete existing plans
+          connection.query('DELETE FROM plan_package WHERE package_id = ?', [packageId], (err) => {
               if (err) {
-                return connection.rollback(() => {
-                  connection.release();
-                  console.error('Error committing transaction:', err);
-                  res.status(500).json({ error: 'Internal Server Error' });
-                });
+                  return connection.rollback(() => {
+                      connection.release();
+                      console.error('Error deleting plans from package:', err);
+                      res.status(500).json({ error: 'Internal Server Error' });
+                  });
               }
-  
-              connection.release();
-              res.status(200).json({ message: 'Plans updated in package' });
-            });
+
+              // Add new plans
+              const values = newPlans.map(plan => [plan.planId, packageId]);
+
+              connection.query('INSERT INTO plan_package (plan_id, package_id) VALUES ?', [values], (err) => {
+                  if (err) {
+                      return connection.rollback(() => {
+                          connection.release();
+                          console.error('Error adding new plans to package:', err);
+                          res.status(500).json({ error: 'Internal Server Error' });
+                      });
+                  }
+
+                  connection.commit((err) => {
+                      if (err) {
+                          return connection.rollback(() => {
+                              connection.release();
+                              console.error('Error committing transaction:', err);
+                              res.status(500).json({ error: 'Internal Server Error' });
+                          });
+                      }
+
+                      connection.release();
+                      res.status(200).json({ message: 'Plans updated in package' });
+                  });
+              });
           });
-        });
       });
-    });
   });
+});
+
 
 module.exports = router;
