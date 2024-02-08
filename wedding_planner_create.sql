@@ -44,7 +44,7 @@ CREATE TABLE clients (
 );
 
 -- Create Wedding Details table(client)
-CREATE TABLE weddingDetils (
+CREATE TABLE weddingDetails (
     wd_id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT,
     selected_side ENUM('groom', 'bride') DEFAULT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE weddingPlanSelections (
     selection_id INT AUTO_INCREMENT PRIMARY KEY,
     wd_id INT,
     selection_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (wd_id) REFERENCES weddingDetils(wd_id)
+    FOREIGN KEY (wd_id) REFERENCES weddingDetails(wd_id)
 );
 
 -- Create Junction Table for Wedding Plan Selections and Plans(vendor-client)

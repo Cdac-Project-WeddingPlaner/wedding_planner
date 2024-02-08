@@ -79,7 +79,7 @@ SELECT
     p.price,
     wps.status
 FROM
-    weddingDetils wd
+    weddingDetails wd
 JOIN
     weddingPlanSelections ws ON wd.wd_id = ws.wd_id
 JOIN

@@ -24,7 +24,7 @@ VALUES
     (10, 'avatar5.jpg');
 
 -- Insert sample data for Wedding Details table(client)
-INSERT INTO weddingDetils (client_id, selected_side, bride_name, groom_name, relation, wedding_date, gest_count)
+INSERT INTO weddingDetails (client_id, selected_side, bride_name, groom_name, relation, wedding_date, gest_count)
 VALUES
     (1, 'bride', 'Neha Srivastava', 'Amit Sharma', 'Sister', '2024-06-15', 150),
     (2, 'groom', 'Amit Singh', 'Pooja Verma', 'Brother', '2024-07-20', 200),

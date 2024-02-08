@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import img from "../resourses/profile.jpg";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import "./profile.css";
 
 function ClientProfileScreen() {
   const [user, setUser] = useState({
+    client_id:"",
     first_name: "",
     middle_name: "",
     last_name: "",
@@ -31,8 +34,8 @@ function ClientProfileScreen() {
         const config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: '/client/6',
-          headers: {'x-auth-token': token}
+          url: 'http://localhost:7777/client/6',
+          headers: { 'x-auth-token': token }
         };
 
         const response = await axios(config);
@@ -46,8 +49,14 @@ function ClientProfileScreen() {
 
     const fetchWeddingDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:7777/wedding/client/6');
-        setWeddingDetails(response.data); 
+        const config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `http://localhost:7777/wedding/client/${user.client_id}`,
+          headers: { 'x-auth-token': token }
+        };
+        const response = await axios(config);
+        setWeddingDetails(response.data);
       } catch (error) {
         console.error('Error fetching wedding details:', error);
       }
@@ -62,7 +71,7 @@ function ClientProfileScreen() {
         <img src={img} alt="Profile" />
 
         <div className="centered-container">
-          <button className="editButton">Edit</button>
+          <button className="editButton"></button>
         </div>
 
         <br />
@@ -70,7 +79,7 @@ function ClientProfileScreen() {
         <div className="details">
           <div></div>
           <p className="titles">Personal Details</p>
-          <button className="editButton">Edit</button>
+          <button className="editButton"></button>
         </div>
         <br />
         <table className="table-responsive">
@@ -97,7 +106,7 @@ function ClientProfileScreen() {
             </tr>
 
             <tr>
-              <td>Address</td>
+              <td>Address : </td>
               <td>
                 <input type="text" name="Address" value={user.address} />
               </td>
@@ -110,7 +119,7 @@ function ClientProfileScreen() {
         <div className="details">
           <div></div>
           <p className="titles">Wedding Details</p>
-          <button className="editButton">Edit</button>
+          <button className="editButton"></button>
         </div>
 
         <br />
