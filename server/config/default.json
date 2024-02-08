@@ -2,8 +2,8 @@
     "PORT": 7777,
     "SERVER": "localhost",
     "DATABASE": "wedding_planner",
-    "USER": "W2_80539_Tanmay",
-    "PASSWORD": "Tanmay@21",
+    "USER": "root",
+    "PASSWORD": "manager",
     "jwtSecret": "wedplan"
   }
   

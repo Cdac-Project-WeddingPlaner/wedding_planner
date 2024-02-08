@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useHistory, Link } from "react-router-dom";
 import logo from "./resourses/logo.png";
-import "./login.css";
+import "./utils/login.css";
 
 function Login() {
   const history = useHistory();

@@ -1,6 +1,6 @@
 /* Login.css */
 .login-body {
-    background-image: url('resourses/loginBG.png');
+    background-image: url('../resourses/loginBG.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
