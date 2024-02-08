@@ -32,17 +32,20 @@ router.get('/', authenticateUser, (req, res) => {
 });
 
 // Get a specific client by ID with user information using the ClientView
-router.get('/:client_id', authenticateUser, (req, res) => {
-    const clientId = req.params.client_id;
+router.get('/:user_id', authenticateUser, (req, res) => {
+    const UserId = req.params.user_id;
 
+    console.log(UserId)
+    console.log(req.user_id)
+    console.log(req.user_type)
     // Check if the user is either an admin or the requested client
-    if (req.user_type !== 'admin' && req.user_id !== clientId) {
+    if (req.user_type !== 'admin' && req.user_type !== 'client' && req.user_id !== UserId) {
         return res.status(403).json({ error: 'Forbidden. Insufficient privileges.' });
-    }
+      }
 
-    const sql = 'SELECT * FROM ClientView WHERE client_id = ?';
+    const sql = 'SELECT * FROM ClientView WHERE user_id = ?';
 
-    pool.query(sql, [clientId], (err, results) => {
+    pool.query(sql, [UserId], (err, results) => {
         if (err) {
             console.error(err);
             res.status(500).send('Internal Server Error');
