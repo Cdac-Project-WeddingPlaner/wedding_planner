@@ -42,7 +42,7 @@ router.get('/', authenticateUser, (req, res) => {
 
     pool.query('SELECT * FROM weddingDetails', (err, results) => {
         if (err) {
-            console.error('Error getting all weddings:', err);
+           // console.error('Error getting all weddings:', err);
             res.status(500).json({ error: 'Internal Server Error' });
             return;
         }
@@ -58,7 +58,7 @@ router.get('/client/:clientId', authenticateUser, (req, res) => {
 
     pool.query('SELECT * FROM weddingDetails WHERE client_id = ?', [clientId], (err, results) => {
         if (err) {
-            console.error('Error getting wedding by client ID:', err);
+   //         console.error('Error getting wedding by client ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });
             return;
         }

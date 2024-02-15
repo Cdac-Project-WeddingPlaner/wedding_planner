@@ -1,21 +1,21 @@
 -- Insert sample data for Users table
 INSERT INTO users (password, phone_number, email, first_name, middle_name, last_name, address, user_type)
 VALUES
-    ('password1', '9876543210', 'vendor1@example.com', 'Amit', 'Kumar', 'Sharma', '123 Street, City', 'vendor'),
-    ('password2', '9876543211', 'vendor2@example.com', 'Priya', 'Singh', 'Verma', '456 Avenue, Town', 'vendor'),
-    ('password3', '9876543212', 'vendor3@example.com', 'Rajesh', 'Gupta', 'Agarwal', '789 Road, Village', 'vendor'),
-    ('password4', '9876543213', 'vendor4@example.com', 'Anjali', 'Yadav', 'Sinha', '101 Alley, Metro', 'vendor'),
-    ('password5', '9876543214', 'vendor5@example.com', 'Vikas', 'Verma', 'Kumar', '202 Lane, City', 'vendor'),
-    ('password6', '9876543215', 'client1@example.com', 'Neha', 'Srivastava', 'Shukla', '456 Street, Town', 'client'),
-    ('password7', '9876543216', 'client2@example.com', 'Amit', 'Singh', 'Sharma', '789 Avenue, Village', 'client'),
-    ('password8', '9876543217', 'client3@example.com', 'Pooja', 'Verma', 'Gupta', '101 Road, Metro', 'client'),
-    ('password9', '9876543218', 'client4@example.com', 'Rahul', 'Yadav', 'Sinha', '202 Alley, City', 'client'),
-    ('password10', '9876543219', 'client5@example.com', 'Sneha', 'Kumar', 'Agarwal', '303 Lane, Town', 'client'),
-    ('password11', '9876543220', 'admin1@example.com', 'Admin', 'One', 'Super', '404 Street, Village', 'admin'),
-    ('password12', '9876543221', 'admin2@example.com', 'Admin', 'Two', 'Mega', '505 Avenue, Metro', 'admin');
+    ('$2b$10$tN6yNSBe0Z.ZHQO8.lKdW..XMeNYN3txWZmhdbIUyIDO7edyyr1N2', '9876543210', 'v1@w.com', 'Amit', 'Kumar', 'Sharma', '123 Street, City', 'vendor'),
+    ('$2b$10$diiaSZn5dleNIp4.EI4DOevz1DB41bbHHAYmzzHOk0PaTY/IfuwNm', '9876543211', 'v2@w.com', 'Priya', 'Singh', 'Verma', '456 Avenue, Town', 'vendor'),
+    ('$2b$10$1usYif6isppTcCzJyNk88uO/ZxmO2mdFlsbBvYxIMZrFqRwUQPx.K', '9876543212', 'v3@w.com', 'Rajesh', 'Gupta', 'Agarwal', '789 Road, Village', 'vendor'),
+    ('$2b$10$A6q8hdUEplAxSaJn5aaWoui2ZttI9ROC37tihX2XLtkHovd1PrRWS', '9876543213', 'v4@w.com', 'Anjali', 'Yadav', 'Sinha', '101 Alley, Metro', 'vendor'),
+    ('$2b$10$oKLASwVBbUNItBLsV5nsieOfW1vtP5lO1vQWoDwP0UNsyIqxluvD6', '9876543214', 'v5@w.com', 'Vikas', 'Verma', 'Kumar', '202 Lane, City', 'vendor'),
+    ('$2b$10$Vrov01/fmzA0vn0WPvDpP.SLOyzhI9NRmETDKNt7L2zApcdRfrf4G', '9876543215', 'c1@w.com', 'Neha', 'Srivastava', 'Shukla', '456 Street, Town', 'client'),
+    ('$2b$10$lMQX21YSy0xEuhCK7BU/1O9y9/AC.ShXNAuvX1R0t6jyxjrEDLASq', '9876543216', 'c2@w.com', 'Amit', 'Singh', 'Sharma', '789 Avenue, Village', 'client'),
+    ('$2b$10$U2vBpol1fSSnwQ/i5npREuuVPzkBKLy2UXYR0S2.sDmyIX3b2AkHe', '9876543217', 'c3@w.com', 'Pooja', 'Verma', 'Gupta', '101 Road, Metro', 'client'),
+    ('$2b$10$yTD8yqdfM38iRaY1YVlrgOLMJKC3sDcuj8xhmLK8Kdqw4ni7etRO6', '9876543218', 'c4@w.com', 'Rahul', 'Yadav', 'Sinha', '202 Alley, City', 'client'),
+    ('$2b$10$CgTVBseNyL8JoDcSQTIq2e4eMHYvbjmpArf.sDXf5S/0F.KkLWGm2', '9876543219', 'c5@w.com', 'Sneha', 'Kumar', 'Agarwal', '303 Lane, Town', 'client'),
+    ('$2b$10$iQOnv8LB..OpfJ54rdTavu7wruyZNVAsAOdnoeGGhlyHAvikPceAO', '9876543220', 'a1@w.com', 'Admin', 'One', 'Super', '404 Street, Village', 'admin'),
+    ('$2b$10$u9dxFJs4dxjSDXgkb7HfEOTNGS5/RwWhkU/otDNLvafPB2haimkEa', '9876543221', 'a2@w.com', 'Admin', 'Two', 'Mega', '505 Avenue, Metro', 'admin');
 
 -- Insert sample data for Clients table
-INSERT INTO clients (user_id, avetar_image_url)
+INSERT INTO clients (user_id, avatar_image_url)
 VALUES
     (6, 'avatar1.jpg'),
     (7, 'avatar2.jpg'),
@@ -24,7 +24,7 @@ VALUES
     (10, 'avatar5.jpg');
 
 -- Insert sample data for Wedding Details table(client)
-INSERT INTO weddingDetails (client_id, selected_side, bride_name, groom_name, relation, wedding_date, gest_count)
+INSERT INTO weddingDetils (client_id, selected_side, bride_name, groom_name, relation, wedding_date, guest_count)
 VALUES
     (1, 'bride', 'Neha Srivastava', 'Amit Sharma', 'Sister', '2024-06-15', 150),
     (2, 'groom', 'Amit Singh', 'Pooja Verma', 'Brother', '2024-07-20', 200),
@@ -39,13 +39,13 @@ VALUES
     (12);
 
 -- Insert sample data for Vendors table
-INSERT INTO vendors (user_id, service_type, business_name, contact_email, altarnet_number, business_address, logo_image_url, description)
+INSERT INTO vendors (user_id, service_type, business_name, contact_email, alternate_number, business_address, logo_image_url, description, is_verified)
 VALUES
-    (1, 'Hall', 'Dream Hall', 'vendor1@example.com', '9876543210', '123 Street, City', 'logo1.jpg', 'A beautiful venue for your special day.'),
-    (2, 'Catering', 'Delicious Delights', 'vendor2@example.com', '9876543211', '456 Avenue, Town', 'logo2.jpg', 'Exquisite catering services for your events.'),
-    (3, 'Music', 'Melody Makers', 'vendor3@example.com', '9876543212', '789 Road, Village', 'logo3.jpg', 'Creating unforgettable musical experiences.'),
-    (4, 'Photography', 'Perfect Shots', 'vendor4@example.com', '9876543213', '101 Alley, Metro', 'logo4.jpg', 'Capturing your special moments with perfection.'),
-    (5, 'Decoration', 'Elegant Decor', 'vendor5@example.com', '9876543214', '202 Lane, City', 'logo5.jpg', 'Transforming spaces into dreamy environments.');
+    (1, 'Hall', 'Dream Hall', 'vendor1@example.com', '9876543210', '123 Street, City', 'logo1.jpg', 'A beautiful venue for your special day.', 1),
+    (2, 'Catering', 'Delicious Delights', 'vendor2@example.com', '9876543211', '456 Avenue, Town', 'logo2.jpg', 'Exquisite catering services for your events.', 1),
+    (3, 'Music', 'Melody Makers', 'vendor3@example.com', '9876543212', '789 Road, Village', 'logo3.jpg', 'Creating unforgettable musical experiences.', 1),
+    (4, 'Photography', 'Perfect Shots', 'vendor4@example.com', '9876543213', '101 Alley, Metro', 'logo4.jpg', 'Capturing your special moments with perfection.', 1),
+    (5, 'Decoration', 'Elegant Decor', 'vendor5@example.com', '9876543214', '202 Lane, City', 'logo5.jpg', 'Transforming spaces into dreamy environments.', 1);
 
 -- Insert sample data for Halls table(vendor)
 INSERT INTO halls (vendor_id, hall_name, capacity, address, rental_fee, amenities, is_verified)
@@ -118,10 +118,28 @@ VALUES
 
     
 -- Insert sample data for Reviews table(client-vendor)
-INSERT INTO reviews (plan_id, client_id, review)
+INSERT INTO reviews (plan_id, client_id, review, rating)
 VALUES
-    (1, 1, 'Excellent venue and service!'),
-    (2, 2, 'Delicious food, great catering service!'),
-    (3, 3, 'Amazing musical performance, highly recommended!'),
-    (4, 1, 'Photography team captured our special moments beautifully.'),
-    (5, 1, 'Elegant decoration, made our event memorable.');
+    (1, 1, 'Excellent venue and service!',4),
+    (2, 2, 'Delicious food, great catering service!',3),
+    (3, 3, 'Amazing musical performance, highly recommended!',5),
+    (4, 1, 'Photography team captured our special moments beautifully.',4),
+    (5, 1, 'Elegant decoration, made our event memorable.',5),
+    (1, 1, 'Excellent venue and service!',3);
+
+-- Insert sample data for Package table(admin)
+INSERT INTO package (packagename)
+VALUES
+    ('Standard Package'),
+    ('Premium Package'),
+    ('Deluxe Package');
+
+-- Insert sample data for Plan_Package table(admin)
+INSERT INTO plan_package (plan_id, package_id)
+VALUES
+    (1, 1),
+    (2, 1),
+    (3, 2),
+    (4, 2),
+    (5, 3),
+    (6, 3);

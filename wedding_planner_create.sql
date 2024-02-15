@@ -1,6 +1,3 @@
--- Create Database
-CREATE DATABASE IF NOT EXISTS wedding_planner;
-
 -- Use the Database
 USE wedding_planner;
 
@@ -25,12 +22,12 @@ CREATE TABLE vendors (
     service_type ENUM('Hall', 'Catering', 'Music', 'Photography', 'Decoration'),
     business_name VARCHAR(255),
     contact_email VARCHAR(255),
-    altarnet_number VARCHAR(15),
+    alternate_number VARCHAR(15),
     business_address VARCHAR(255),
     logo_image_url VARCHAR(255),
     description TEXT,
     edit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_verified BOOLEAN DEFAULT 0,
+    is_verified VARCHAR(9),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
@@ -38,13 +35,13 @@ CREATE TABLE vendors (
 CREATE TABLE clients (
     client_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNIQUE,
-    avetar_image_url VARCHAR(255),
+    avatar_image_url VARCHAR(255),
     edit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- Create Wedding Details table(client)
-CREATE TABLE weddingDetails (
+CREATE TABLE weddingDetils (
     wd_id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT,
     selected_side ENUM('groom', 'bride') DEFAULT NULL,
@@ -52,7 +49,7 @@ CREATE TABLE weddingDetails (
     groom_name VARCHAR(100) DEFAULT NULL,
     relation VARCHAR(100) DEFAULT NULL,
     wedding_date DATE,
-    gest_count INT(6),
+    guest_count INT(6),
     add_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     edit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES clients(client_id)
@@ -108,7 +105,7 @@ CREATE TABLE weddingPlanSelections (
     selection_id INT AUTO_INCREMENT PRIMARY KEY,
     wd_id INT,
     selection_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (wd_id) REFERENCES weddingDetails(wd_id)
+    FOREIGN KEY (wd_id) REFERENCES weddingDetils(wd_id)
 );
 
 -- Create Junction Table for Wedding Plan Selections and Plans(vendor-client)
@@ -144,8 +141,7 @@ CREATE TABLE reviews (
     plan_id INT,
     client_id INT,
     review VARCHAR(255),
+    rating INT,
     FOREIGN KEY (plan_id) REFERENCES plans(plan_id),
     FOREIGN KEY (client_id) REFERENCES clients(client_id)
 );
-    
- 

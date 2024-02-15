@@ -23,7 +23,7 @@ router.get('/', authenticateUser, (req, res) => {
     pool.query(sql, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -50,7 +50,7 @@ router.get('/:vendor_id', authenticateUser, (req, res) => {
     pool.query(sql, [vendorId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -58,7 +58,7 @@ router.get('/:vendor_id', authenticateUser, (req, res) => {
             const vendorProfile = results[0];
             res.status(200).json(vendorProfile);
         } else {
-            res.status(404).send('Vendor not found');
+            res.status(404).send({ error : 'Vendor not found'});
         }
     });
 });
@@ -103,7 +103,7 @@ router.put('/:vendor_id', authenticateUser, (req, res) => {
         (err) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 
@@ -114,11 +114,11 @@ router.put('/:vendor_id', authenticateUser, (req, res) => {
                 (err) => {
                     if (err) {
                         console.error(err);
-                        res.status(500).send('Internal Server Error');
+                        res.status(500).send({ error : 'Internal Server Error'});
                         return;
                     }
 
-                    res.status(200).send('Vendor information updated successfully');
+                    res.status(200).send({ message : 'Vendor information updated successfully' });
                 }
             );
         }

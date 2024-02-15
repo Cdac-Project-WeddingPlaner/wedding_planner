@@ -4,6 +4,7 @@ const mysql = require('mysql');
 const config = require('config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { check } = require('express-validator');
 const multer = require('multer');
 const path = require('path');
 
@@ -16,224 +17,327 @@ const pool = mysql.createPool({
     database: config.get('DATABASE')
 });
 
-// Multer configuration
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // Specify the destination folder for uploads
-        cb(null, 'uploads');
+const USER_TYPE_VENDOR = 'vendor';
+const USER_TYPE_CLIENT = 'client';
+
+// Multer Configuration
+const storage1 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, `uploads/logos`));
     },
-    filename: (req, file, cb) => {
-        // Specify a unique filename for the uploaded file
+    filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
 
-// Multer upload for avatar images
-const avatarUpload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5 // Limit the file size to 5MB (adjust as needed)
+const storage2 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, `uploads/avatars`));
     },
-    fileFilter: (req, file, cb) => {
-        // Add your file type validation logic here if needed
-        cb(null, true);
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
-}).single('avatar_image');
+});
 
-// Multer upload for logo images
-const logoUpload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5 // Limit the file size to 5MB (adjust as needed)
-    },
-    fileFilter: (req, file, cb) => {
-        // Add your file type validation logic here if needed
-        cb(null, true);
-    }
-}).single('logo_image');
+const uploadlogo = multer({ storage: storage1 });
+const uploadavtars = multer({ storage: storage2 });
 
 // Login route
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
 
-    pool.query(
-        'SELECT user_id, first_name, last_name, user_type FROM users WHERE email = ? AND password = ?',
-        [email, password],
-        (err, results) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Internal Server Error');
-                return;
-            }
-
-            if (results.length === 1) {
-                const user = results[0];
-
-                const token = jwt.sign({ user_id: user.user_id, user_type: user.user_type }, config.get('jwtSecret'), {
-                    expiresIn: '1h'
-                });
-
-                res.status(200).json({
-                    user_id: user.user_id,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    user_type: user.user_type,
-                    token: token
-                });
-            } else {
-                res.status(401).send('Invalid email or password');
-            }
+    pool.query('SELECT user_id, first_name, last_name, user_type, password FROM users WHERE email = ?', [email], (error, results) => {
+        if (error) {
+            console.error(error.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
         }
-    );
+
+        if (results.length === 1) {
+            const user = results[0];
+            bcrypt.compare(password, user.password, (bcryptError, isPasswordMatch) => {
+                if (bcryptError) {
+                    console.error(bcryptError);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+
+                if (isPasswordMatch) {
+                    const token = jwt.sign({ user_id: user.user_id, user_type: user.user_type }, config.get('jwtSecret'), {
+                        expiresIn: '1h'
+                    });
+
+                    res.status(200).json({
+                        user_id: user.user_id,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        user_type: user.user_type,
+                        token: token
+                    });
+                } else {
+                    res.status(401).json({ error: 'Invalid email or password' });
+                }
+            });
+        } else {
+            res.status(401).json({ error: 'Invalid email or password' });
+        }
+    });
 });
 
 // Register as a vendor route
-router.post('/register/vendor', logoUpload, async (req, res) => {
+router.post('/register/vendor', [
+    check('email').isEmail(),
+    check('password').isLength({ min: 6 }),
+    check('service_type').notEmpty(),
+    check('business_name').notEmpty(),
+    check('contact_email').isEmail(),
+    check('altarnet_number').notEmpty(),
+    check('business_address').notEmpty(),
+    check('description').notEmpty(),
+], uploadlogo.single('logo_image_url'), (req, res) => {
     const {
-        email,
-        password,
-        first_name,
-        middle_name,
-        last_name,
-        phone_number,
-        address,
-        service_type,
-        business_name,
-        contact_email,
-        altarnet_number,
-        business_address,
-        description,
-        is_verified
+        email, password, first_name, middle_name, last_name, phone_number, address,
+        service_type, business_name, contact_email, altarnet_number, business_address,
+        description
     } = req.body;
 
-    const logoImage = req.file;
+    const logoImageFile = req.file;
 
-    if (!logoImage) {
-        res.status(400).send('Logo image is required');
-        return;
+    // Ensure a file was uploaded
+    if (!logoImageFile) {
+        return res.status(400).json({ error: 'Logo image is required' });
     }
 
-    const logoImageUrl = `uploads/${logoImage.filename}`;
+    const logoImageName = logoImageFile.filename;  // Use only the file name with extension
 
-    try {
-        // Start a transaction
-        await pool.beginTransaction();
+    // Start a transaction
+    pool.getConnection((connectionError, connection) => {
+        if (connectionError) {
+            console.error(connectionError);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
 
-        // Insert into the 'users' table
-        const userInsertResult = await pool.query(
-            'INSERT INTO users (email, password, first_name, middle_name, last_name, phone_number, address, user_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [email, password, first_name, middle_name, last_name, phone_number, address, 'vendor']
-        );
+        connection.beginTransaction((transactionError) => {
+            if (transactionError) {
+                console.error(transactionError);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return connection.rollback(() => {
+                    connection.release();
+                });
+            }
 
-        const user_id = userInsertResult.insertId;
+            bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+                if (hashError) {
+                    console.error(hashError);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return connection.rollback(() => {
+                        connection.release();
+                    });
+                }
 
-        // Insert into the 'vendors' table
-        await pool.query(
-            'INSERT INTO vendors (user_id, service_type, business_name, contact_email, altarnet_number, business_address, logo_image_url, description, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [user_id, service_type, business_name, contact_email, altarnet_number, business_address, logoImageUrl, description, is_verified]
-        );
+                connection.query(
+                    'INSERT INTO users (email, password, first_name, middle_name, last_name, phone_number, address, user_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [email, hashedPassword, first_name, middle_name, last_name, phone_number, address, USER_TYPE_VENDOR],
+                    (userError, userResults) => {
+                        if (userError) {
+                            // Handle unique constraint violation (duplicate email)
+                            if (userError.code === 'ER_DUP_ENTRY') {
+                                console.error('Email already exists:', email);
+                                res.status(400).json({ error: 'Email already exists' });
+                            } else {
+                                console.error(userError);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                            }
 
-        // Commit the transaction
-        await pool.commit();
+                            return connection.rollback(() => {
+                                connection.release();
+                            });
+                        }
 
-        res.status(201).send('Vendor registration successful');
-    } catch (error) {
-        console.error(error);
+                        const user_id = userResults.insertId;
 
-        // Rollback the transaction if an error occurs
-        await pool.rollback();
+                        connection.query(
+                            'INSERT INTO vendors (user_id, service_type, business_name, contact_email, altarnet_number, business_address, logo_image_url, description, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                            [user_id, service_type, business_name, contact_email, altarnet_number, business_address, logoImageName, description, 0],
+                            (vendorError) => {
+                                if (vendorError) {
+                                    console.error(vendorError);
+                                    res.status(500).json({ error: 'Internal Server Error' });
+                                    return connection.rollback(() => {
+                                        connection.release();
+                                    });
+                                }
 
-        res.status(500).send('Internal Server Error');
-    }
+                                // Commit the transaction
+                                connection.commit((commitError) => {
+                                    if (commitError) {
+                                        console.error(commitError);
+                                        res.status(500).json({ error: 'Internal Server Error' });
+                                        return connection.rollback(() => {
+                                            connection.release();
+                                        });
+                                    }
+
+                                    res.status(201).json({ message: 'Vendor registration successful' });
+
+                                    // Release the connection after a successful commit
+                                    connection.release();
+                                });
+                            }
+                        );
+                    }
+                );
+            });
+        });
+    });
 });
 
 
 // Register as a client route
-router.post('/register/client', avatarUpload, async (req, res) => {
-    const { email, password, first_name, last_name, phone_number, address } = req.body;
-    const avatarImage = req.file;
+router.post('/register/client', [
+    check('email').isEmail(),
+    check('password').isLength({ min: 6 }),
+    // ... (other validation checks)
+], uploadavtars.single('avatar_image_url'), (req, res) => {
+    const {
+        email, password, first_name, last_name, phone_number, address
+    } = req.body;
 
-    if (!avatarImage) {
-        res.status(400).send('Avatar image is required');
-        return;
-    }
+    const avatarImagePath = req.file ? req.file.path : null;
 
-    const avatarImageUrl = `uploads/${avatarImage.filename}`;
+    // Start a transaction
+    pool.getConnection((connectionError, connection) => {
+        if (connectionError) {
+            console.error(connectionError);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
 
-    try {
-        // Start a transaction
-        await pool.beginTransaction();
+        connection.beginTransaction((transactionError) => {
+            if (transactionError) {
+                console.error(transactionError);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return connection.rollback(() => {
+                    connection.release();
+                });
+            }
 
-        // Insert into the 'users' table
-        const userInsertResult = await pool.query(
-            'INSERT INTO users (email, password, first_name, last_name, phone_number, address, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [email, password, first_name, last_name, phone_number, address, 'client']
-        );
+            bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+                if (hashError) {
+                    console.error(hashError);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return connection.rollback(() => {
+                        connection.release();
+                    });
+                }
 
-        const user_id = userInsertResult.insertId;
+                connection.query(
+                    'INSERT INTO users (email, password, first_name, last_name, phone_number, address, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [email, hashedPassword, first_name, last_name, phone_number, address, USER_TYPE_CLIENT],
+                    (userError, results) => {
+                        if (userError) {
+                            // Handle unique constraint violation (duplicate email)
+                            if (userError.code === 'ER_DUP_ENTRY') {
+                                console.error('Email already exists:', email);
+                                res.status(400).json({ error: 'Email already exists' });
+                            } else {
+                                console.error(userError);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                            }
 
-        // Insert into the 'clients' table
-        await pool.query(
-            'INSERT INTO clients (user_id, avatar_image_url) VALUES (?, ?)',
-            [user_id, avatarImageUrl]
-        );
+                            return connection.rollback(() => {
+                                connection.release();
+                            });
+                        }
 
-        // Commit the transaction
-        await pool.commit();
+                        const user_id = results.insertId;
 
-        res.status(201).send('Client registration successful');
-    } catch (error) {
-        console.error(error);
+                        connection.query(
+                            'INSERT INTO clients (user_id, avatar_image_url) VALUES (?, ?)',
+                            [user_id, avatarImagePath],
+                            (clientError) => {
+                                if (clientError) {
+                                    console.error(clientError);
+                                    res.status(500).json({ error: 'Internal Server Error' });
+                                    return connection.rollback(() => {
+                                        connection.release();
+                                    });
+                                }
 
-        // Rollback the transaction if an error occurs
-        await pool.rollback();
+                                // Commit the transaction
+                                connection.commit((commitError) => {
+                                    if (commitError) {
+                                        console.error(commitError);
+                                        res.status(500).json({ error: 'Internal Server Error' });
+                                        return connection.rollback(() => {
+                                            connection.release();
+                                        });
+                                    }
 
-        res.status(500).send('Internal Server Error');
-    }
+                                    res.status(201).json({ message: 'Client registration successful' });
+
+                                    // Release the connection after a successful commit
+                                    connection.release();
+                                });
+                            }
+                        );
+                    }
+                );
+            });
+        });
+    });
 });
 
 // Change Password route
-router.post('/change-password', authenticateUser, async (req, res) => {
-    try {
-        const { oldPassword, newPassword } = req.body;
-        const userId = req.user_id;
+router.post('/change-password', authenticateUser, (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user_id;
 
-        // Start a transaction
-        await pool.beginTransaction();
-
-        // Fetch the user's current password from the database
-        const passwordResults = await pool.query('SELECT password FROM users WHERE user_id = ?', [userId]);
-
-        if (passwordResults.length === 1) {
-            const user = passwordResults[0];
-
-            // Verify the old password
-            if (oldPassword === user.password) {
-                // Update the user's password in the database
-                await pool.query('UPDATE users SET password = ? WHERE user_id = ?', [newPassword, userId]);
-
-                // Commit the transaction
-                await pool.commit();
-
-                res.status(200).send('Password changed successfully');
-            } else {
-                // Old password does not match
-                res.status(401).send('Invalid old password');
-            }
-        } else {
-            // User not found
-            res.status(404).send('User not found');
+    pool.query('SELECT password FROM users WHERE user_id = ?', [userId], (queryError, results) => {
+        if (queryError) {
+            console.error(queryError);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
         }
-    } catch (error) {
-        console.error(error);
 
-        // Rollback the transaction if an error occurs
-        await pool.rollback();
+        if (results.length === 1) {
+            const user = results[0];
+            bcrypt.compare(oldPassword, user.password, (bcryptError, isPasswordMatch) => {
+                if (bcryptError) {
+                    console.error(bcryptError);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
 
-        res.status(500).send('Internal Server Error');
-    }
+                if (isPasswordMatch) {
+                    bcrypt.hash(newPassword, 10, (hashError, hashedNewPassword) => {
+                        if (hashError) {
+                            console.error(hashError);
+                            res.status(500).json({ error: 'Internal Server Error' });
+                            return;
+                        }
+
+                        pool.query('UPDATE users SET password = ? WHERE user_id = ?', [hashedNewPassword, userId], (updateError) => {
+                            if (updateError) {
+                                console.error(updateError);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                                return;
+                            }
+
+                            res.status(200).json({ message: 'Password changed successfully' });
+                        });
+                    });
+                } else {
+                    res.status(401).json({ error: 'Invalid old password' });
+                }
+            });
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    });
 });
-
 
 module.exports = router;

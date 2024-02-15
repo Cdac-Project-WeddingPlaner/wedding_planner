@@ -27,7 +27,7 @@ router.post('/', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error :  'Internal Server Error'});
                 return;
             }
 
@@ -40,14 +40,26 @@ router.post('/', authenticateUser, (req, res) => {
 
 // Get all plans
 router.get('/', (req, res) => {
-    pool.query('SELECT * FROM plans', (err, results) => {
+    const sql = `
+        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
+        FROM plans
+        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
+        GROUP BY plans.plan_id;
+    `;
+
+    pool.query(sql, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error :  'Internal Server Error'});
             return;
         }
 
-        res.status(200).json(results);
+        const plansWithAvgRating = results.map((plan) => {
+            const { rating, ...rest } = plan;
+            return { ...rest, rating: rating || 0 }; // Default to 0 if no reviews
+        });
+
+        res.status(200).json(plansWithAvgRating);
     });
 });
 
@@ -55,17 +67,26 @@ router.get('/', (req, res) => {
 router.get('/:plan_id', (req, res) => {
     const planId = req.params.plan_id;
 
-    pool.query('SELECT * FROM plans WHERE plan_id = ?', [planId], (err, results) => {
+    const sql = `
+        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
+        FROM plans
+        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
+        WHERE plans.plan_id = ?
+        GROUP BY plans.plan_id;
+    `;
+
+    pool.query(sql, [planId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error :  'Internal Server Error'});
             return;
         }
 
         if (results.length === 1) {
-            res.status(200).json(results[0]);
+            const { average_rating, ...rest } = results[0];
+            res.status(200).json({ ...rest, average_rating: average_rating || 0 });
         } else {
-            res.status(404).send('Plan not found');
+            res.status(404).send({error : 'Plan not found'});
         }
     });
 });
@@ -86,14 +107,14 @@ router.put('/:plan_id', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error :  'Internal Server Error'});
                 return;
             }
 
             if (results.affectedRows === 1) {
-                res.status(200).send('Plan updated successfully');
+                res.status(200).send({message : 'Plan updated successfully'});
             } else {
-                res.status(404).send('Plan not found');
+                res.status(404).send({error : 'Plan not found'});
             }
         }
     );
@@ -112,14 +133,14 @@ router.delete('/:plan_id', authenticateUser, (req, res) => {
     pool.query('DELETE FROM plans WHERE plan_id = ?', [planId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error :  'Internal Server Error'});
             return;
         }
 
         if (results.affectedRows === 1) {
-            res.status(200).send('Plan deleted successfully');
+            res.status(200).send({message : 'Plan deleted successfully'});
         } else {
-            res.status(404).send('Plan not found');
+            res.status(404).send({error : 'Plan not found'});
         }
     });
 });
@@ -127,18 +148,27 @@ router.delete('/:plan_id', authenticateUser, (req, res) => {
 
 // Get verified plans
 router.get('/v/v', (req, res) => {
-    const sql = 'SELECT * FROM plans WHERE is_verified = 1';
+    const sql = `
+        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
+        FROM plans
+        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
+        WHERE plans.is_verified = 1
+        GROUP BY plans.plan_id;
+    `;
 
     pool.query(sql, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error :  'Internal Server Error'});
             return;
         }
 
-        console.log("Result:", results); // Add this line for debugging
+        const verifiedPlansWithAvgRating = results.map((plan) => {
+            const { average_rating, ...rest } = plan;
+            return { ...rest, average_rating: average_rating || 0 }; // Default to 0 if no reviews
+        });
 
-        res.status(200).json(results);
+        res.status(200).json(verifiedPlansWithAvgRating);
     });
 });
 
@@ -146,14 +176,27 @@ router.get('/v/v', (req, res) => {
 router.get('/vendor/:vendor_id', (req, res) => {
     const vendorId = req.params.vendor_id;
 
-    pool.query('SELECT * FROM plans WHERE vendor_id = ?', [vendorId], (err, results) => {
+    const sql = `
+        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
+        FROM plans
+        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
+        WHERE plans.vendor_id = ?
+        GROUP BY plans.plan_id;
+    `;
+
+    pool.query(sql, [vendorId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error :  'Internal Server Error'});
             return;
         }
 
-        res.status(200).json(results);
+        const plansByVendorWithAvgRating = results.map((plan) => {
+            const { average_rating, ...rest } = plan;
+            return { ...rest, average_rating: average_rating || 0 }; // Default to 0 if no reviews
+        });
+
+        res.status(200).json(plansByVendorWithAvgRating);
     });
 });
 
@@ -173,14 +216,14 @@ router.patch('/:plan_id', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 
             if (results.affectedRows === 1) {
-                res.status(200).send('Plan status updated successfully');
+                res.status(200).send({message : 'Plan status updated successfully'});
             } else {
-                res.status(404).send('Plan not found');
+                res.status(404).send({error : 'Plan not found'});
             }
         }
     );
@@ -190,21 +233,29 @@ router.patch('/:plan_id', authenticateUser, (req, res) => {
 // Get Plans by Vendor Service Type
 router.get('/service/:serviceType', (req, res) => {
     const serviceType = req.params.serviceType;
+
     const sql = `
-        SELECT plans.*
+        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
         FROM plans
+        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
         JOIN vendors ON plans.vendor_id = vendors.vendor_id
-        WHERE vendors.service_type = ?;
+        WHERE vendors.service_type = ? AND plans.is_verified = 1
+        GROUP BY plans.plan_id;
     `;
 
     pool.query(sql, [serviceType], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
-        res.status(200).json(results);
+        const verifiedPlansByServiceTypeWithAvgRating = results.map((plan) => {
+            const { average_rating, ...rest } = plan;
+            return { ...rest, average_rating: average_rating || 0 }; // Default to 0 if no reviews
+        });
+
+        res.status(200).json(verifiedPlansByServiceTypeWithAvgRating);
     });
 });
 

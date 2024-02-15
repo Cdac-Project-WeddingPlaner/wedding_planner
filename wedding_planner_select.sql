@@ -1,7 +1,10 @@
+
+
+USE wedding_planner;
 SELECT * FROM users;
 SELECT * FROM vendors;
 SELECT * FROM clients;
-SELECT * FROM weddingDetails;
+SELECT * FROM weddingDetils;
 SELECT * FROM admins;
 SELECT * FROM halls;
 SELECT * FROM plans;

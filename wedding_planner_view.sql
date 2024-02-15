@@ -51,7 +51,7 @@ SELECT
     v.service_type,
     v.business_name,
     v.contact_email,
-    v.altarnet_number,
+    v.alternate_number,
     v.business_address,
     v.logo_image_url,
     v.description,
@@ -79,7 +79,7 @@ SELECT
     p.price,
     wps.status
 FROM
-    weddingDetails wd
+    weddingDetils wd
 JOIN
     weddingPlanSelections ws ON wd.wd_id = ws.wd_id
 JOIN

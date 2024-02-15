@@ -25,7 +25,7 @@ router.get('/',authenticateUser, (req, res) => {
     pool.query(sql, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -42,14 +42,14 @@ router.get('/:selection_id',authenticateUser, (req, res) => {
     pool.query(sql, [selectionId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
         if (results.length > 0) {
             res.status(200).json(results[0]);
         } else {
-            res.status(404).send('Wedding Plan Selection not found');
+            res.status(404).send({ error : 'Wedding Plan Selection not found'});
         }
     });
 });
@@ -69,7 +69,7 @@ router.post('/', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 
@@ -94,14 +94,14 @@ router.put('/update', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 
             if (results.affectedRows === 1) {
-                res.status(200).send('Wedding Plan Selection date and time updated successfully');
+                res.status(200).send({ message : 'Wedding Plan Selection date and time updated successfully' });
             } else {
-                res.status(404).send('Wedding Plan Selection or Plan not found');
+                res.status(404).send({ error :'Wedding Plan Selection or Plan not found'});
             }
         }
     );
@@ -122,7 +122,7 @@ router.post('/plans', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 
@@ -146,7 +146,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -154,7 +154,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
             if (err) {
                 connection.release();
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 
@@ -164,7 +164,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
                     return connection.rollback(() => {
                         connection.release();
                         console.error(err);
-                        res.status(500).send('Internal Server Error');
+                        res.status(500).send({ error : 'Internal Server Error'});
                     });
                 }
 
@@ -174,7 +174,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
                         return connection.rollback(() => {
                             connection.release();
                             console.error(err);
-                            res.status(500).send('Internal Server Error');
+                            res.status(500).send({ error : 'Internal Server Error'});
                         });
                     }
 
@@ -183,12 +183,12 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
                             return connection.rollback(() => {
                                 connection.release();
                                 console.error(err);
-                                res.status(500).send('Internal Server Error');
+                                res.status(500).send({ error : 'Internal Server Error'});
                             });
                         }
 
                         connection.release();
-                        res.status(200).send('Wedding Plan Selection deleted successfully');
+                        res.status(200).send({message : 'Wedding Plan Selection deleted successfully'});
                     });
                 });
             });
@@ -211,7 +211,7 @@ router.get('/vendor/:vendor_id', authenticateUser, (req, res) => {
     pool.query(sql, [vendorId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -242,7 +242,7 @@ router.get('/client/:client_id', authenticateUser, (req, res) => {
     pool.query(sql, [clientId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -267,7 +267,7 @@ router.delete('/p/plans', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(500).send({ error : 'Internal Server Error'});
                 return;
             }
 

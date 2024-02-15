@@ -26,11 +26,11 @@ router.post('/', authenticateUser, (req, res) => {
     pool.query(sql, [plan_id, client_id, review], (err) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
-        res.status(201).send('Review created successfully');
+        res.status(201).send({message : 'Review created successfully'});
     });
 });
 
@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
     pool.query(sql, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -58,14 +58,14 @@ router.get('/:review_id', (req, res) => {
     pool.query(sql, [reviewId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
         if (results.length === 1) {
             res.json(results[0]);
         } else {
-            res.status(404).send('Review not found');
+            res.status(404).send({ error : 'Review not found'});
         }
     });
 });
@@ -78,7 +78,7 @@ router.get('/plan/:plan_id', (req, res) => {
     pool.query(sql, [planId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -94,7 +94,7 @@ router.get('/client/:client_id', (req, res) => {
     pool.query(sql, [clientId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -116,7 +116,7 @@ router.get('/vendor/:vendor_id', (req, res) => {
     pool.query(sql, [vendorId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
@@ -139,14 +139,14 @@ router.put('/:review_id', authenticateUser, (req, res) => {
     pool.query(sql, [review, reviewId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
         if (results.affectedRows === 0) {
-            res.status(404).send('Review not found');
+            res.status(404).send({ error : 'Review not found'});
         } else {
-            res.status(200).send('Review updated successfully');
+            res.status(200).send({message : 'Review updated successfully'});
         }
     });
 });
@@ -164,14 +164,14 @@ router.delete('/:review_id', authenticateUser, (req, res) => {
     pool.query(sql, [reviewId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).send({ error : 'Internal Server Error'});
             return;
         }
 
         if (results.affectedRows === 0) {
-            res.status(404).send('Review not found');
+            res.status(404).send({ error : 'Review not found'});
         } else {
-            res.status(200).send('Review deleted successfully');
+            res.status(200).send({ message : 'Review deleted successfully' });
         }
     });
 });
