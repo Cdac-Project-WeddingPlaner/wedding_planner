@@ -1,0 +1,18 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:title="Home"
+        android:icon="@drawable/baseline_home_24"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_my_plan"
+        android:title="My Plan"
+        android:icon="@drawable/ic_my_plan"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_profile"
+        app:showAsAction="never" />
+</menu>
