@@ -1,0 +1,5 @@
+<!-- res/drawable/edit_text_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFF4F3" /> <!-- Light pink background -->
+    <corners android:radius="8dp" /> <!-- Adjust the radius for rounded corners -->
+</shape>

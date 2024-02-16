@@ -29,16 +29,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       // Toolbar toolbar = findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
 
         // Enable home button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Tie The Knot");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setTitle("Tie The Knot");
 
         // Disable the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+      //  getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         loginButton = findViewById(R.id.loginButton);
 
@@ -64,31 +64,25 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        switch (itemName) {
-            case "Home":
-                // Replace the current fragment with the HomeFragment
-                break;
-
-            case "Profile":
-                // Replace the current fragment with the ProfileFragment
-                replaceFragment(new ClientProfileFrag());
-                break;
-
-            case "My Plan":
-                // Replace the current fragment with the MyPlanFragment
-                replaceFragment(new ClientMyPlanFrag());
-                break;
-        }
+//        switch (itemName) {
+//            case "Home":
+//                // Replace the current fragment with the HomeFragment
+//                break;
+//
+//            case "Profile":
+//                // Replace the current fragment with the ProfileFragment
+//                replaceFragment(new ClientProfileFrag());
+//                break;
+//
+//            case "My Plan":
+//                // Replace the current fragment with the MyPlanFragment
+//                replaceFragment(new ClientMyPlanFrag());
+//                break;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void replaceFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);  // Optional: Add to back stack to enable fragment navigation
-        transaction.commit();
-    }
 
     private void openLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);

@@ -45,4 +45,18 @@ public interface ApiService {
             @Part("address") RequestBody address,
             @Part MultipartBody.Part avatarImage
     );
+
+    @GET("/client/{user_id}")
+    Call<JsonObject> getClientById(
+            @Header("x-auth-token") String authToken,
+            @Path("user_id") String userId
+
+    );
+
+    @PUT("/client/{client_id}")
+    Call<Void> updateClient(
+            @Header("x-auth-token") String authToken,
+            @Path("client_id") String clientId,
+            @Body JsonObject updateRequestBody
+    );
 }

@@ -14,12 +14,13 @@ public class ApiResponseHandler {
 
     public static <T> void handleApiResponse(Response<T> response, ApiManager.OnApiCallCompleteListener<T> listener) {
         if (response.isSuccessful()) {
+          //  Log.e("aaaa" , response.body().toString());
             T responseData = response.body();
-            if (responseData != null) {
+//            if (responseData != null) {
                 listener.onSuccess(responseData);
-            } else {
-                listener.onFailure("Response body is null");
-            }
+//            } else {
+//                listener.onFailure("Response body is null");
+//            }
         } else {
             handleApiError(response, listener);
         }
@@ -31,10 +32,16 @@ public class ApiResponseHandler {
 
         try {
             String errorBody = response.errorBody() != null ? response.errorBody().string() : "";
-            // Check if the errorBody is a primitive type
+
             if (errorBody.startsWith("\"") || errorBody.startsWith("{")) {
                 JsonObject errorJson = new Gson().fromJson(errorBody, JsonObject.class);
-                listener.onFailure("HTTP Code " + statusCode + ": " + errorJson.toString());
+
+                if (errorJson.has("error")) {
+                    String errorMessage = errorJson.get("error").getAsString();
+                    listener.onFailure(errorMessage);
+                } else {
+                    listener.onFailure(errorJson.toString());
+                }
             } else {
                 listener.onFailure("HTTP Code " + statusCode + ": " + errorBody);
             }
@@ -44,4 +51,5 @@ public class ApiResponseHandler {
             listener.onFailure("Unknown error occurred. Error: " + e.getMessage());
         }
     }
+
 }

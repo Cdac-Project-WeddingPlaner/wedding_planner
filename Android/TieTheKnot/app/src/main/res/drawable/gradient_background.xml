@@ -1,0 +1,18 @@
+<!-- res/drawable/custom_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#F44D4D"
+                android:endColor="#AC0D64"
+                android:type="linear"
+                android:angle="90
+"/>
+        </shape>
+    </item>
+<!--    <item android:top="-20dp">-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="#ED8B8B" />-->
+<!--        </shape>-->
+<!--    </item>-->
+</layer-list>

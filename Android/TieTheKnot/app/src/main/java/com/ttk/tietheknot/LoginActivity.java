@@ -7,11 +7,15 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 import com.ttk.tietheknot.API.ApiManager;
+import com.ttk.tietheknot.admin.AdminActivity;
+import com.ttk.tietheknot.client.ClientActivity;
+import com.ttk.tietheknot.vendor.VendorActivity;
 
 public class LoginActivity extends AppCompatActivity implements ApiManager.OnApiCallCompleteListener<JsonObject> {
 
@@ -58,17 +62,20 @@ public class LoginActivity extends AppCompatActivity implements ApiManager.OnApi
         // Store the response data (for example, in SharedPreferences)
         storeLoginResponseData(data);
 
-        // Print the response data to the log
-        printLoginResponseToLog(data);
-
         // Display the response data in the UI
         displayResponseInUI(data);
+
+        showToast("Login successful!");
+
+        // Redirect based on user_type
+        redirectToActivity(data.get("user_type").getAsString());
     }
 
     @Override
     public void onFailure(String errorMessage) {
         // Handle failure (print error message, show an alert, etc.)
         responseTextView.setText("Login failed: " + errorMessage);
+        showToast(errorMessage);
     }
 
     private void storeLoginResponseData(JsonObject data) {
@@ -76,22 +83,58 @@ public class LoginActivity extends AppCompatActivity implements ApiManager.OnApi
         // For example, you can use SharedPreferences
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("user_id", data.get("user_id").getAsString());
+        editor.putString("role", data.get("user_type").getAsString());
         editor.putString("first_name", data.get("first_name").getAsString());
+        Log.e("sdzfxc", data.toString());
+       editor.putString("token", data.get("token").getAsString());
+
+
         // Add other necessary data
         editor.apply();
     }
 
-    private void printLoginResponseToLog(JsonObject data) {
-        // Log the response data
-        Log.d("LoginResponse", "User ID: " + data.get("user_id").getAsString());
-        Log.d("LoginResponse", "First Name: " + data.get("first_name").getAsString());
-        // Print other necessary data to the log
+    private void redirectToActivity(String userType) {
+        Log.d("RedirectActivity", "User Type: " + userType);
+
+        Intent intent;
+
+        switch (userType) {
+            case "admin":
+                Log.e("RedirectActivity33333", "Unknown user_type: " + userType);
+                intent = new Intent(LoginActivity.this, AdminActivity.class);
+                break;
+            case "vendor":
+                Log.e("RedirectActivity2222", "Unknown user_type: " + userType);
+                intent = new Intent(LoginActivity.this, VendorActivity.class);
+                break;
+            case "client":
+                Log.e("RedirectActivity1111", "Unknown user_type: " + userType);
+                intent = new Intent(LoginActivity.this, ClientActivity.class);
+                break;
+            default:
+                Log.e("RedirectActivity", "Unknown user_type: " + userType);
+                // Handle unknown user_type or fallback to a default activity
+                intent = new Intent(LoginActivity.this, UserRegisterActivity.class);
+                break;
+        }
+
+        Log.d("RedirectActivity", "Starting activity: " + intent.getComponent());
+        startActivity(intent);
+
+        // Finish the current LoginActivity (optional)
+        finish();
     }
 
+
+
+    private void showToast(String message) {
+        // Display a Toast message
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
     private void displayResponseInUI(JsonObject data) {
         // Display the response data in the UI (assuming you have a TextView with id responseTextView)
         responseTextView.setText("User ID: " + data.get("user_id").getAsString() + "\n"
-                + "First Name: " + data.get("first_name").getAsString());
+                + "user_type : " + data.get("user_type").getAsString() );
         // Update UI as needed
     }
 }

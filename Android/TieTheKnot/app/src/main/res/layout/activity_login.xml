@@ -3,44 +3,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/gradient_background"
     android:padding="16dp"
     tools:context=".LoginActivity">
 
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"/>
+    <!-- Logo -->
+    <!-- Replace with your actual logo -->
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/emailEditText"
+    <!-- Login Form -->
+    <LinearLayout
+        android:layout_width="380dp"
+        android:layout_height="430dp"
         android:layout_marginTop="16dp"
-        android:hint="Password"
-        android:inputType="textPassword"/>
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/passwordEditText"
-        android:layout_marginTop="16dp"
-        android:text="Login"/>
+        android:background="@drawable/rounded_corners_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/loginButton"
-        android:layout_marginTop="16dp"
-        android:text="Register"/>
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/responseTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/registerButton"
-        android:layout_marginTop="16dp"/>
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Password"
+            android:inputType="textPassword" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="50dp"
+
+                android:background="@drawable/button_p"
+                android:text="Login" />
+
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/button_p"
+                android:text="Register" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/responseTextView"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginTop="16dp"
+            android:text=""
+            android:textColor="#4E0303"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+
 </RelativeLayout>
