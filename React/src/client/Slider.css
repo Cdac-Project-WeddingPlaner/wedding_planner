@@ -1,0 +1,89 @@
+/* Home.css */
+
+/* Slider */
+/* Add a horizontal line with a color */
+.heading {
+  background-color: #FCC5BC;
+  font-family: cursive;
+  text-align: center;
+  bottom: 0;
+  font-size: 30px;
+  width: 100%;
+  margin: 0;
+  font-weight: bold;
+  color: #640202;
+}
+
+.image {
+  width: 70%;
+  height: 60%;
+  background-color: #f0f0f0;
+  display: flex;
+}
+
+
+.slider {
+    width: 97%;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 2%;
+    margin-bottom: 2%;
+  }
+  
+  .slides {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap; /* Prevent wrapping of slides */
+  }
+  
+  .slide {
+    flex: 0 0 auto;
+    width: 400px; /* Increase slide width */
+    height: 400px; /* Increase slide height */
+    scroll-snap-align: start;
+    padding: 1rem;
+    margin-right: 1rem;
+    background-color: #fae2da;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Arrow buttons */
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: 12px;
+    cursor: pointer;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+  
+  .arrow-left {
+    left: 0;
+  }
+  
+  .arrow-right {
+    right: 0;
+  }
+
+  .add-button {
+    width: 70%;
+    height: 10%;
+    text-align: center;
+    background-color: #9bffb1;
+    color: #0c0b0b;
+    position: relative;
+  }
+
+
+  

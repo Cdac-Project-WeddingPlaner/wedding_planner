@@ -7,7 +7,7 @@ import Navigation from './utils/Navigation';
 
 import logo from './resourses/logo.png';
 
-import './Landing.css';
+import './utils/Landing.css';
 
 function Landing() {
   const history = useHistory();

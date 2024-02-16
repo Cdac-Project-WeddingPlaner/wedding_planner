@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const config = require('config');
 const { authenticateUser } = require('./authenticate');
 
