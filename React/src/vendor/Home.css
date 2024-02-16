@@ -1,0 +1,58 @@
+/* Home.css */
+/* .container {
+  padding: auto;
+  display: flex;
+}  */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  
+}
+
+.responsive-table th, .responsive-table td {
+  
+  text-align: center;  
+  border-bottom: 1px solid #ddd;
+}
+
+
+.responsive-table th {
+  background-color: #f073c0;
+}
+
+img{
+  height: 40%;
+  width : 40%;
+  
+}
+
+.btn {
+  padding: 6px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.btn-success {
+  background-color: #28682a;
+  padding: auto;
+  margin-left: 50px;
+  align-items: center;
+  margin: 30px;
+  color: rgba(255, 255, 255, 0.938);
+}
+.btn-danger {
+  background-color: #ca1204;
+  padding: auto;
+  margin-left: 50px;
+  align-items: center;
+  margin: 30px;
+  color: rgba(255, 255, 255, 0.938);
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
