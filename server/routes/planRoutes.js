@@ -71,7 +71,7 @@ router.get('/:plan_id', (req, res) => {
         SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
         FROM plans
         LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
-        WHERE plans.plan_id = ?
+        WHERE plans.plan_id = 1
         GROUP BY plans.plan_id;
     `;
 

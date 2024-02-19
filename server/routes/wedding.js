@@ -56,7 +56,7 @@ router.get('/', authenticateUser, (req, res) => {
 router.get('/client/:clientId', authenticateUser, (req, res) => {
     const { clientId } = req.params;
 
-    pool.query('SELECT * FROM weddingDetails WHERE client_id = ?', [clientId], (err, results) => {
+    pool.query('SELECT * FROM weddingDetils WHERE client_id = ?', [clientId], (err, results) => {
         if (err) {
    //         console.error('Error getting wedding by client ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -98,7 +98,7 @@ router.put('/:weddingId', authenticateUser, (req, res) => {
     const { weddingId } = req.params;
     const updatedData = req.body;
 
-    pool.query('UPDATE weddingDetails SET ? WHERE wd_id = ?', [updatedData, weddingId], (err) => {
+    pool.query('UPDATE weddingDetils SET ? WHERE wd_id = ?', [updatedData, weddingId], (err) => {
         if (err) {
             console.error('Error updating wedding by ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -118,7 +118,7 @@ router.delete('/:weddingId', authenticateUser, (req, res) => {
 
     const { weddingId } = req.params;
 
-    pool.query('DELETE FROM weddingDetails WHERE wd_id = ?', [weddingId], (err) => {
+    pool.query('DELETE FROM weddingDetils WHERE wd_id = ?', [weddingId], (err) => {
         if (err) {
             console.error('Error deleting wedding by ID:', err);
             res.status(500).json({ error: 'Internal Server Error' });

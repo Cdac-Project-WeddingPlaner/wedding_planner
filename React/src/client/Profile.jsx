@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import img from "../resourses/download.jpeg";
+import img from "../resourses/profile.jpg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import "./profile.css";
@@ -24,26 +24,26 @@ function ClientProfileScreen() {
     groom_name: "",
     relation: "",
     wedding_date: "",
-    gest_count: ""
+    guest_count: ""
   });
 
   const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [editPersonalDetails, setEditPersonalDetails] = useState(false);
   const [editWeddingDetails, setEditWeddingDetails] = useState(false);
 
-
+  const user_id = sessionStorage.getItem('user_id');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userResponse = await axios.get('http://localhost:7777/client/6', {
+        const userResponse = await axios.get(`http://localhost:7777/client/6`, {
           headers: { 'x-auth-token': token }
         });
         setUser(userResponse.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
-  
+
       try {
         const weddingResponse = await axios.get('http://localhost:7777/wedding/client/1', {
           headers: { 'x-auth-token': token }
@@ -53,18 +53,17 @@ function ClientProfileScreen() {
         console.error('Error fetching wedding details:', error);
       }
     };
-  
+
     fetchData();
   }, [token]); // Include token in the dependency array if it might change
+
+
+
+  const onEdit = () => {
+    setEditPersonalDetails(prevState => !prevState);
+    setEditWeddingDetails(prevState => !prevState);
+  };
   
-
-  const handleEditPersonalDetails = () => {
-    setEditPersonalDetails(!editPersonalDetails);
-  };
-
-  const handleEditWeddingDetails = () => {
-    setEditWeddingDetails(!editWeddingDetails);
-  };
 
   const handleChange = (e, type) => {
     const { name, value } = e.target;
@@ -88,7 +87,7 @@ function ClientProfileScreen() {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
-  
+
   // Inside your handleSave function
   const handleSave = async () => {
     try {
@@ -101,12 +100,12 @@ function ClientProfileScreen() {
         wedding_date: formatDateForDatabase(weddingDetails.wedding_date),
         guest_count: weddingDetails.guest_count
       };
-  
+
       // Send PUT request to update wedding details
       await axios.put('http://localhost:7777/wedding/1', weddetail, {
         headers: { 'x-auth-token': token }
       });
-  
+
       // Update client information
       const updatedUser = {
         email: user.email,
@@ -116,12 +115,12 @@ function ClientProfileScreen() {
         last_name: user.last_name,
         address: user.address
       };
-  
+
       // Send PUT request to update user details
       await axios.put('http://localhost:7777/client/6', updatedUser, {
         headers: { 'x-auth-token': token }
       });
-  
+
       // Handle success
       alert('Data saved successfully!');
     } catch (error) {
@@ -130,8 +129,8 @@ function ClientProfileScreen() {
       alert('Error updating data. Please try again.');
     }
   };
-  
-  
+
+
 
   return (
     <>
@@ -149,7 +148,7 @@ function ClientProfileScreen() {
         <div className="details">
           <div></div>
           <p className="titles">Personal Details</p>
-          <button className="editButton" onClick={handleEditPersonalDetails}></button>
+          <div></div>
         </div>
         <br />
         <table className="table-responsive">
@@ -227,7 +226,7 @@ function ClientProfileScreen() {
         <div className="details">
           <div></div>
           <p className="titles">Wedding Details</p>
-          <button className="editButton" onClick={handleEditWeddingDetails}></button>
+          <div></div>
         </div>
 
         <br />
@@ -305,7 +304,7 @@ function ClientProfileScreen() {
                 <input
                   type="text"
                   name="gest_count"
-                  value={weddingDetails.gest_count}
+                  value={weddingDetails.guest_count}
                   disabled={!editWeddingDetails}
                   onChange={(e) => handleChange(e, "wedding")}
                 />
@@ -315,7 +314,8 @@ function ClientProfileScreen() {
         </table>
         <br />
 
-        <button type="button" className="btn btn-primary" onClick={handleSave} style={{ width: '100px', marginBottom: '20px' }}>
+        <button type="button" className="btn btn-primary-" onClick={onEdit} style={{ width: '100px', marginBottom: '20px' }}>Edit</button>
+        <button type="button" className="btn btn-success" onClick={handleSave} style={{ width: '100px', marginBottom: '20px' }}>
           Save
         </button>
       </center>

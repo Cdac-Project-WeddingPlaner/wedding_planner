@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Database credentials
-DB_USER="W2_80539_Tanmay"
-DB_PASSWORD="Tanmay@21"
+DB_USER="root"
+DB_PASSWORD="manager"
 DB_NAME="wedding_planner"
 
 # Path to your SQL script
