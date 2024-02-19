@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+
+* {
+    padding: inherit;
+    margin: initial;
+    font-family: 'Roboto Slab', serif;
+}
+
+
+
+body{
+    background-color: white;
+}
+
+.bg-picture {
+    background-image: url("resourses/home-bg.jpg");
+    background-position: center center;
+    background-size: max(90vw, 100vw);
+    height: 744px;
+    position: relative;
+    background-repeat: no-repeat;
+}
+
+.bg-picture .box{
+    height: 644px;
+    width: 100%;
+    opacity: 0.70;
+    position: absolute;
+}
+
+.intro{
+    height: calc(100% -100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    gap: 23px;
+    padding: 0 30px;
+}
+
+/* .intro> :nth-child(1){
+    color: #ff2865;
+    font-weight: bolder;
+    font-size: 48px;
+    text-align: center;
+    margin-top: 420px;
+    font-family: 'Protest Riot', sans-serif;
+} */
+
+.intro> :last-child{
+    font-weight: 400;
+    font-size: 50px;
+    text-align: center;
+    color: #b72d54;
+    margin-top: 470px;
+    font-family: 'Protest Riot', sans-serif;
+}
+
+.separation {
+    height: 7px;
+    background-color: #f5c7f7;
+    position: relative;
+    z-index: 20;
+}
+
+
+.first, .second {
+    display: flex;
+    justify-content: center;
+    max-width: 70vw;
+    margin: auto;
+    color: #b72d54;
+    align-items: center;
+}
+
+section.first>div,  section.second>div{
+    display: flex;
+    flex-direction: column;
+    padding: 15px 30px;
+    word-wrap: normal;
+}
+
+section.first>div :nth-child(1), section.second>div :nth-child(1){
+    font-size: 27px;
+    font-weight: bolder;
+
+}
+
+section.first>div :nth-child(2), section.second>div :nth-child(2){
+    font-size: 25px;
+}
+
+section.first>div :nth-child(3), section.second>div :nth-child(3){
+    font-size: 25px;
+}
+
+
+
+.prof_img {
+    position: inherit;
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+} 
+
+.secImg{
+    position: relative;
+}
+
+.secImg img{
+    width: 500px;
+    position: relative;
+    z-index: 10;
+    border-radius: 44px;
+}
+
+.about {
+    display: flex;
+    justify-content: center;
+    max-width: 70vw;
+    margin: auto;
+    color: #b72d54;
+    align-items: center;
+}
+
+.us {
+    margin-right: auto;
+    font-size: 19px;
+}
+.us> :nth-child(1){
+    font-weight: bolder;
+    font-size: 20px;
+    word-wrap: normal;
+
+}
+
+.contact{
+    display: flex;
+    gap: 20px;
+    
+}
+
+.contact-section{
+    margin-right: 220px;
+    font-size: 20px;
+}
+.contact-section> :nth-child(1) {
+    font-weight: bolder;
+    font-size: 18px;
+    word-wrap: normal;
+}
+
+.vendor-contact{
+    font-size: 15px;
+    word-wrap: normal;
+}
+
+.user-contact{
+    font-size: 15px;
+    word-wrap: normal;
+}
+
+.alerts input{
+    padding: 7px 101px 8px 14px;
+    color: #f5c7f7;
+    font-size: 12px;
+    border-radius: 4px;
+    background-color: #FFE5E5;
+    border: #fff;
+}
+
+.btn {
+    background-color: #b72d54;
+    height: 32px;
+    color: white;
+    padding: 3px 24px;
+    font-size: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.social {
+    margin-top: 50px;
+}
+
+.social span {
+    font-size: 20px;
+}
+.social ul {
+    display:block;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-top: 105px;
+    transform: translate(-50%, -50%);
+    
+}
+
+ul li{
+    list-style: none;
+}
+
+ul li a{
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    text-align: center;
+    line-height: 50px;
+    font-size: 25px;
+    margin: 0 10px;
+    display:block;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid #fff;
+    z-index: 1;
+}
+
+ul li a .icon{
+    position: relative;
+    color: #262626;
+    transition: .5s;
+    z-index: 3;
+}
+
+ul li a:hover .icon{
+    color: #fff;
+    transform: rotateY(360deg);
+}
+
+ul li a:before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: .5s;
+    z-index: 2;
+}
+
+ul li a:hover:before {
+    top: 0;
+}
+
+ul li:nth-child(1) a:before {
+    background: #3b5999;
+}
+
+ul li:nth-child(2) a:before{
+    background: #55acee;
+  }
+  
+ul li:nth-child(3) a:before {
+    background: #0077b5;
+  }
+  
+ul li:nth-child(4) a:before {
+    background: #dd4b39;
+  }
