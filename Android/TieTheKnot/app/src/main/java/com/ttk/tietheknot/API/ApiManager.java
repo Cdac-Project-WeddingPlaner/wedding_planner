@@ -3,6 +3,7 @@ package com.ttk.tietheknot.API;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -17,6 +18,12 @@ public class ApiManager {
     private GetAllPlansManager getAllPlansManager;
     private GetClientByIdManager getClientByIdManager;
     private UpdateClientManager updateClientManager;
+    private UpdateWeddingManager updateWeddingManager;
+    private CreateWeddingManager createWeddingManager;
+    private GetWiddingDeByUIdManager getWiddingDeByUIdManager;
+    private GetPlanByServiceManager getPlanByServiceManager;
+    private GetSelectPlansByUIdManager getSelectPlansByUIdManager;
+    private AddPlanInSelectinManager addPlanInSelectinManager;
 
     public ApiManager() {
         this.apiService = RetrofitBuilder.createApiService();
@@ -26,6 +33,13 @@ public class ApiManager {
         this.getAllPlansManager = new GetAllPlansManager(apiService);
         this.getClientByIdManager = new GetClientByIdManager(apiService);
         this.updateClientManager = new UpdateClientManager(apiService);
+        this.updateWeddingManager = new UpdateWeddingManager(apiService);
+        this.createWeddingManager = new CreateWeddingManager(apiService);
+        this.getWiddingDeByUIdManager = new GetWiddingDeByUIdManager(apiService);
+        this.getPlanByServiceManager = new GetPlanByServiceManager(apiService);
+        this.getSelectPlansByUIdManager = new GetSelectPlansByUIdManager(apiService);
+        this.addPlanInSelectinManager = new AddPlanInSelectinManager(apiService);
+
     }
 
     public void login(String email, String password, OnApiCallCompleteListener<JsonObject> listener) {
@@ -55,6 +69,19 @@ public class ApiManager {
         updateClientManager.updateClient(authToken, userId, updateRequestBody, listener);
     }
 
+    public void updateWedding(String authToken, String userId, String uside, String ubrideName, String ugroomName, String urelation,String uweddingDate,String uguestCount, ApiManager.OnApiCallCompleteListener<JsonObject> listener) {
+        // Construct the updateRequestBody
+        JsonObject updateRequestBody = new JsonObject();
+        updateRequestBody.addProperty("selected_side", uside);
+        updateRequestBody.addProperty("bride_name", ubrideName);
+        updateRequestBody.addProperty("groom_name", ugroomName);
+        updateRequestBody.addProperty("relation", urelation);
+        updateRequestBody.addProperty("wedding_date", uweddingDate);
+        updateRequestBody.addProperty("guest_count", uguestCount);
+        // Call the API to update client data
+        updateWeddingManager.updateWedding(authToken, userId, updateRequestBody, listener);
+    }
+
     public void registerClient(String email, String password, String firstName, String lastName,
                                String phoneNumber, String address, File avatarImage,
                                OnApiCallCompleteListener<JsonObject> listener) {
@@ -68,6 +95,24 @@ public class ApiManager {
 
     public void getClientById(String authToken, String userId, OnApiCallCompleteListener<JsonObject> listener) {
         getClientByIdManager.getClientById(authToken, userId, listener);
+    }
+
+    public void getWeddingDeByUId(String authToken, String userId, ApiManager.OnApiCallCompleteListener<JsonArray> listener) {
+        getWiddingDeByUIdManager.getWeddingDeByUId(authToken, userId, listener);
+    }
+
+    public void getSelectPlansByUId(String authToken, String userId, ApiManager.OnApiCallCompleteListener<JsonArray> listener) {
+        getSelectPlansByUIdManager.getSelectPlansByUId(authToken, userId, listener);
+    }
+    public void getPlanByService(String service, ApiManager.OnApiCallCompleteListener<JsonArray> listener) {
+        getPlanByServiceManager.getPlanByService(service, listener);
+    }
+    public void createWedding(JsonObject weddingData, OnApiCallCompleteListener<JsonObject> listener) {
+        createWeddingManager.createWedding(weddingData, listener);
+    }
+
+    public void addPlanInSelection(String token, String user_id, JsonObject planData, OnApiCallCompleteListener<JsonObject> listener) {
+        addPlanInSelectinManager.addPlanInSelectin(token,user_id,planData, listener);
     }
 
     public interface OnApiCallCompleteListener<T> {

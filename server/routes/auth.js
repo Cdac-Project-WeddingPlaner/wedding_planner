@@ -200,7 +200,10 @@ router.post('/register/vendor', [
 router.post('/register/client', [
     check('email').isEmail(),
     check('password').isLength({ min: 6 }),
-    // ... (other validation checks)
+    check('first_name').notEmpty(),
+    check('last_name').notEmpty(),
+    check('phone_number').notEmpty(),
+    check('address').notEmpty(),
 ], uploadavtars.single('avatar_image_url'), (req, res) => {
     const {
         email, password, first_name, last_name, phone_number, address
@@ -247,18 +250,18 @@ router.post('/register/client', [
                                 console.error(userError);
                                 res.status(500).json({ error: 'Internal Server Error' });
                             }
-
+                
                             return connection.rollback(() => {
                                 connection.release();
                             });
                         }
-
-                        const user_id = results.insertId;
-
+                
+                        const user_id = results.insertId; // Use insertId as client_id
+                
                         connection.query(
                             'INSERT INTO clients (user_id, avatar_image_url) VALUES (?, ?)',
                             [user_id, avatarImagePath],
-                            (clientError) => {
+                            (clientError, clientResults) => {
                                 if (clientError) {
                                     console.error(clientError);
                                     res.status(500).json({ error: 'Internal Server Error' });
@@ -266,7 +269,9 @@ router.post('/register/client', [
                                         connection.release();
                                     });
                                 }
-
+                                
+                                const client_id = clientResults.insertId; // Use insertId as client_id
+                
                                 // Commit the transaction
                                 connection.commit((commitError) => {
                                     if (commitError) {
@@ -276,9 +281,10 @@ router.post('/register/client', [
                                             connection.release();
                                         });
                                     }
-
-                                    res.status(201).json({ message: 'Client registration successful' });
-
+                
+                                    // Send the client_id in the response
+                                    res.status(201).json({ client_id, message: 'Client registration successful' });
+                
                                     // Release the connection after a successful commit
                                     connection.release();
                                 });
@@ -286,10 +292,12 @@ router.post('/register/client', [
                         );
                     }
                 );
+                
+                    }
+                );
             });
         });
     });
-});
 
 // Change Password route
 router.post('/change-password', authenticateUser, (req, res) => {

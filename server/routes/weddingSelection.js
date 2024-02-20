@@ -13,7 +13,7 @@ const pool = mysql.createPool({
 });
 
 // Get All Wedding Plan Selections using the weddingselection view
-router.get('/',authenticateUser, (req, res) => {
+router.get('/', authenticateUser, (req, res) => {
 
     // Check if the authenticated user is a client
     if (req.user_type !== 'admin') {
@@ -25,7 +25,7 @@ router.get('/',authenticateUser, (req, res) => {
     pool.query(sql, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send({ error : 'Internal Server Error'});
+            res.status(500).send({ error: 'Internal Server Error' });
             return;
         }
 
@@ -34,7 +34,7 @@ router.get('/',authenticateUser, (req, res) => {
 });
 
 // Get Wedding Plan Selection by ID using the weddingselection view
-router.get('/:selection_id',authenticateUser, (req, res) => {
+router.get('/:selection_id', authenticateUser, (req, res) => {
     const selectionId = req.params.selection_id;
 
     const sql = 'SELECT * FROM weddingselection WHERE selection_id = ?';
@@ -42,14 +42,14 @@ router.get('/:selection_id',authenticateUser, (req, res) => {
     pool.query(sql, [selectionId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send({ error : 'Internal Server Error'});
+            res.status(500).send({ error: 'Internal Server Error' });
             return;
         }
 
         if (results.length > 0) {
             res.status(200).json(results[0]);
         } else {
-            res.status(404).send({ error : 'Wedding Plan Selection not found'});
+            res.status(404).send({ error: 'Wedding Plan Selection not found' });
         }
     });
 });
@@ -69,7 +69,7 @@ router.post('/', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send({ error : 'Internal Server Error'});
+                res.status(500).send({ error: 'Internal Server Error' });
                 return;
             }
 
@@ -94,14 +94,14 @@ router.put('/update', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send({ error : 'Internal Server Error'});
+                res.status(500).send({ error: 'Internal Server Error' });
                 return;
             }
 
             if (results.affectedRows === 1) {
-                res.status(200).send({ message : 'Wedding Plan Selection date and time updated successfully' });
+                res.status(200).send({ message: 'Wedding Plan Selection date and time updated successfully' });
             } else {
-                res.status(404).send({ error :'Wedding Plan Selection or Plan not found'});
+                res.status(404).send({ error: 'Wedding Plan Selection or Plan not found' });
             }
         }
     );
@@ -122,7 +122,7 @@ router.post('/plans', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send({ error : 'Internal Server Error'});
+                res.status(500).send({ error: 'Internal Server Error' });
                 return;
             }
 
@@ -130,6 +130,51 @@ router.post('/plans', authenticateUser, (req, res) => {
         }
     );
 });
+
+// POST /api/plans/:user_id
+router.post('/plans/:user_id', authenticateUser, (req, res) => {
+
+    const { user_id } = req.params; // Extracting user_id from the path parameter
+    const { plan_id, date, time } = req.body;
+
+    // Find selection_id for the given user_id
+    const query = `
+        SELECT wp.selection_id
+        FROM weddingPlanSelections wp
+        JOIN weddingDetils wd ON wp.wd_id = wd.wd_id
+        JOIN clients c ON wd.client_id = c.client_id
+        JOIN users u ON c.user_id = u.user_id
+        WHERE u.user_id = ?;
+    `;
+
+    pool.query(query, [user_id], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Wedding Plan Selection not found for the user.' });
+        }
+
+        const selection_id = results[0].selection_id;
+
+        // Insert into weddingPlanSelections_Plans table
+        pool.query(
+            'INSERT INTO weddingPlanSelections_Plans (selection_id, plan_id, date, time, status) VALUES (?, ?, ?, ?, "pending")',
+            [selection_id, plan_id, date, time],
+            (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+
+                res.status(201).json({ message: 'Plan added to Wedding Plan Selection successfully' });
+            }
+        );
+    });
+});
+
 
 // Delete Wedding Plan Selection by ID with all associated plans
 router.delete('/:selection_id', authenticateUser, (req, res) => {
@@ -146,7 +191,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
-            res.status(500).send({ error : 'Internal Server Error'});
+            res.status(500).send({ error: 'Internal Server Error' });
             return;
         }
 
@@ -154,7 +199,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
             if (err) {
                 connection.release();
                 console.error(err);
-                res.status(500).send({ error : 'Internal Server Error'});
+                res.status(500).send({ error: 'Internal Server Error' });
                 return;
             }
 
@@ -164,7 +209,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
                     return connection.rollback(() => {
                         connection.release();
                         console.error(err);
-                        res.status(500).send({ error : 'Internal Server Error'});
+                        res.status(500).send({ error: 'Internal Server Error' });
                     });
                 }
 
@@ -174,7 +219,7 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
                         return connection.rollback(() => {
                             connection.release();
                             console.error(err);
-                            res.status(500).send({ error : 'Internal Server Error'});
+                            res.status(500).send({ error: 'Internal Server Error' });
                         });
                     }
 
@@ -183,12 +228,12 @@ router.delete('/:selection_id', authenticateUser, (req, res) => {
                             return connection.rollback(() => {
                                 connection.release();
                                 console.error(err);
-                                res.status(500).send({ error : 'Internal Server Error'});
+                                res.status(500).send({ error: 'Internal Server Error' });
                             });
                         }
 
                         connection.release();
-                        res.status(200).send({message : 'Wedding Plan Selection deleted successfully'});
+                        res.status(200).send({ message: 'Wedding Plan Selection deleted successfully' });
                     });
                 });
             });
@@ -211,7 +256,7 @@ router.get('/vendor/:vendor_id', authenticateUser, (req, res) => {
     pool.query(sql, [vendorId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send({ error : 'Internal Server Error'});
+            res.status(500).send({ error: 'Internal Server Error' });
             return;
         }
 
@@ -242,13 +287,49 @@ router.get('/client/:client_id', authenticateUser, (req, res) => {
     pool.query(sql, [clientId], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send({ error : 'Internal Server Error'});
+            res.status(500).send({ error: 'Internal Server Error' });
             return;
         }
 
         res.status(200).json(results);
     });
 });
+
+router.get('/user/:user_id', authenticateUser, (req, res) => {
+    // Check if the authenticated user is a client or admin
+    if (req.user_type !== 'client' && req.user_type !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden. Client or admin access required.' });
+    }
+
+    const userId = req.params.user_id;
+
+    const sql = `
+        SELECT 
+        wps.selection_id,
+            ws.plan_id,
+            ws.title,
+            ws.price,
+            ws.date,
+            ws.time,
+            ws.status,
+            v.service_type
+        FROM weddingPlanSelections wps
+        INNER JOIN weddingselection ws ON wps.wd_id = ws.wd_id
+        INNER JOIN clients c ON ws.client_id = c.client_id
+        INNER JOIN vendors v ON ws.vendor_id = v.vendor_id
+        WHERE c.user_id = ?`;
+
+    pool.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.status(200).json(results);
+    });
+});
+
 
 
 // Delete Plan Selection from Wedding Plan Selections
@@ -267,7 +348,7 @@ router.delete('/p/plans', authenticateUser, (req, res) => {
         (err, results) => {
             if (err) {
                 console.error(err);
-                res.status(500).send({ error : 'Internal Server Error'});
+                res.status(500).send({ error: 'Internal Server Error' });
                 return;
             }
 

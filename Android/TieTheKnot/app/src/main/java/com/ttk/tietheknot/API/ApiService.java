@@ -53,10 +53,46 @@ public interface ApiService {
 
     );
 
+    @PUT("/wedding/{client_id}")
+    Call<JsonObject> updateWedding(
+            @Header("x-auth-token") String authToken,
+            @Path("client_id") String userId,
+            @Body JsonObject updateRequestBody
+    );
+
+    @GET("/wedding/user/{user_id}")
+    Call<JsonArray> getWeddingDeByUId(
+            @Header("x-auth-token") String authToken,
+            @Path("user_id") String userId
+    );
+
+    @GET("/plans/service/{service}")
+    Call<JsonArray> getPlanByService(
+            @Path("service") String service
+    );
+
+    @GET("/wedsel/user/{user_id}")
+    Call<JsonArray> getSelectPlansbyUId(
+            @Header("x-auth-token") String authToken,
+            @Path("user_id") String user_id
+    );
+
+
     @PUT("/client/{client_id}")
     Call<Void> updateClient(
             @Header("x-auth-token") String authToken,
             @Path("client_id") String clientId,
             @Body JsonObject updateRequestBody
+    );
+    @POST("/wedding")
+    Call<JsonObject> createWedding(
+            @Body JsonObject weddingData
+    );
+
+    @POST("/wedsel/plans/{user_id}")
+    Call<JsonObject> addPlanInselection(
+            @Header("x-auth-token") String authToken,
+            @Path("user_id") String user_id,
+            @Body JsonObject planData
     );
 }

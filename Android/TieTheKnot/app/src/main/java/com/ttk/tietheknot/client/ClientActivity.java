@@ -94,12 +94,23 @@ public class ClientActivity extends AppCompatActivity {
             showProfileActivity();
             return true;
         }
+        if (item.getItemId() == R.id.action_Wedding) {
+            // Handle profile item click (open profile activity)
+            showWedingActivity();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     private void showProfileActivity() {
         // Create an Intent to start the ClientProfileActivity
         Intent intent = new Intent(this, ClientProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void showWedingActivity() {
+        // Create an Intent to start the ClientProfileActivity
+        Intent intent = new Intent(this, ShowWeddingActivity.class);
         startActivity(intent);
     }
 

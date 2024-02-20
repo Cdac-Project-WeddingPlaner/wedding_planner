@@ -1,0 +1,75 @@
+<!-- activity_create_wedding.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".client.CreateWeddingActivity">
+
+    <EditText
+        android:id="@+id/editTextBrideName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Bride Name"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextGroomName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Groom Name"
+        android:layout_below="@id/editTextBrideName"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Side"/>
+
+    <Spinner
+        android:id="@+id/spinnerSide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+<!--        android:prompt="@string/select_side_prompt"/> -->
+
+    <EditText
+        android:id="@+id/editTextRelation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Relation"
+        android:layout_below="@id/spinnerSide"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editTextWeddingDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Wedding Date"
+        android:layout_below="@id/editTextRelation"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:focusable="false"
+    android:onClick="showDatePickerDialog"/> <!-- Call showDatePickerDialog on click -->
+
+    <EditText
+        android:id="@+id/editTextGuestCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Guest Count"
+        android:layout_below="@id/editTextWeddingDate"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/buttonCreateWedding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Wedding"
+        android:layout_below="@id/editTextGuestCount"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

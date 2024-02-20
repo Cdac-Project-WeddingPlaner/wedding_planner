@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 import com.ttk.tietheknot.API.ApiManager;
+import com.ttk.tietheknot.client.CreateWeddingActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,10 +111,20 @@ public class UserRegisterActivity extends AppCompatActivity {
         apiManager.registerClient(email, password, firstName, lastName, phoneNumber, address, selectedImageFile, new ApiManager.OnApiCallCompleteListener<JsonObject>() {
             @Override
             public void onSuccess(JsonObject data) {
-                // Hide loading indicator here
-                Log.d("RegistrationActivity", "Registration successful. Response: " + data);
-                // Provide user feedback (e.g., toast, dialog)
-                Toast.makeText(UserRegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                Log.e("reg" , data.toString());
+                if (data.has("client_id")) {
+                    int clientId = data.get("client_id").getAsInt();
+
+                    // Provide user feedback (e.g., toast)
+                    Toast.makeText(UserRegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+
+                    // Forward to CreateWeddingActivity with the extracted client_id
+                    forwardToCreateWeddingActivity(clientId);
+                } else {
+                    // Handle the case where client_id is not present in the response
+                    Log.e("RegistrationActivity", "Client ID not found in the response");
+                    Toast.makeText(UserRegisterActivity.this, "Registration successful, but client ID not found", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -124,5 +135,13 @@ public class UserRegisterActivity extends AppCompatActivity {
                 Toast.makeText(UserRegisterActivity.this, "Registration failed. Error: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void forwardToCreateWeddingActivity(int clientId) {
+        Intent createWeddingIntent = new Intent(UserRegisterActivity.this, CreateWeddingActivity.class);
+        String cid = String.valueOf(clientId);
+        createWeddingIntent.putExtra("client_id", cid);
+        startActivity(createWeddingIntent);
+        // Add any additional setup or data passing as needed
     }
 }

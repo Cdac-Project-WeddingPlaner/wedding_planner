@@ -6,13 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 import com.ttk.tietheknot.API.ApiManager;
+import com.ttk.tietheknot.API.URL;
 import com.ttk.tietheknot.R;
 import com.ttk.tietheknot.SharedPreferencesManager;
 
@@ -20,7 +23,7 @@ public class ClientProfileActivity extends AppCompatActivity implements ApiManag
 
     private ApiManager apiManager;
     private SharedPreferencesManager sharedPreferencesManager;
-
+    private ImageView avatar;
     private EditText clientNameTextView;
     private EditText clientEmailTextView;
 
@@ -51,6 +54,7 @@ public class ClientProfileActivity extends AppCompatActivity implements ApiManag
         editTextLastName = findViewById(R.id.editTextLastName);
         editTextAddress = findViewById(R.id.editTextAddress);
         editTextPhone = findViewById(R.id.editTextPhone);
+        avatar = findViewById(R.id.avatar);
 
         btnEdit = findViewById(R.id.btnEdit);
         btnUpdate = findViewById(R.id.btnUpdate);
@@ -91,6 +95,8 @@ public class ClientProfileActivity extends AppCompatActivity implements ApiManag
     }
 
     private void displayResponseInUI(JsonObject data) {
+
+        String url = URL.Url;
         // Display the response data in the UI (assuming you have a TextView with id responseTextView)
         String clientName = data.getAsJsonPrimitive("first_name").getAsString();
         String clientEmail = data.getAsJsonPrimitive("email").getAsString();
@@ -99,8 +105,12 @@ public class ClientProfileActivity extends AppCompatActivity implements ApiManag
         String address = data.getAsJsonPrimitive("address").getAsString();
         String phone = data.getAsJsonPrimitive("phone_number").getAsString();
         client_id = data.getAsJsonPrimitive("client_id").getAsString();
+        String avurl = data.getAsJsonPrimitive("avatar_image_url").getAsString();
         clientNameTextView.setText(clientName);
         clientEmailTextView.setText(clientEmail);
+        String avatarUrl = url + "get-img/avatars/" + avurl;
+        Log.e("imgurl", avatarUrl);
+        Picasso.get().load(avatarUrl).into(avatar);
 
         // Set the additional fields for middle_name, last_name, and address
         editTextMiddleName.setText(middleName);
@@ -150,7 +160,8 @@ public class ClientProfileActivity extends AppCompatActivity implements ApiManag
             public void onSuccess(Void data) {
                 // Handle success (if needed)
                 showToast("Client data updated successfully!");
-                setEditable(false);  // Set back to non-editable state after updating
+                setEditable(false);
+                // Set back to non-editable state after updating
             }
 
             @Override

@@ -4,23 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".client.ClientProfileActivity">
+    tools:context=".client.ShowWeddingActivity">
 
-    <!-- Client Name -->
-
-    <!-- Client Email -->
-    <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/avatar"/>
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +17,7 @@
             android:id="@+id/textViewClientEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email:"
+            android:text="Groom Name:"
             android:textSize="19dp"
             android:textStyle="bold"
             android:layout_below="@id/textViewClientName"
@@ -40,17 +25,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
-        <!-- Client Email -->
         <EditText
-            android:id="@+id/editTextClientEmail"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:hint="Client Email"
-            android:padding="8dp"
-            android:background="#ECECEC"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
+            android:id="@+id/editTextGroomName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Groom Name"
+            android:layout_below="@id/editTextBrideName"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -64,23 +46,18 @@
             android:id="@+id/textViewClientName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name:"
+            android:text="Bride Name:"
             android:textSize="19dp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
-        <!-- Client Name -->
         <EditText
-            android:id="@+id/editTextClientName"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:hint="Client Name"
-            android:padding="8dp"
-            android:background="#ECECEC"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
+            android:id="@+id/editTextBrideName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Bride Name"
+            android:layout_marginBottom="8dp"/>
 
     </LinearLayout>
 
@@ -97,23 +74,16 @@
             android:id="@+id/textViewMiddleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Middle Name:"
+            android:text="Side            :"
             android:textSize="19dp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
-        <EditText
-            android:id="@+id/editTextMiddleName"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:hint="Middle Name"
-            android:padding="8dp"
-            android:background="#ECECEC"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
-
+        <Spinner
+            android:id="@+id/spinnerSide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <!-- Last Name -->
@@ -128,22 +98,20 @@
             android:id="@+id/textViewLastName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Last Name:"
+            android:text="Relation  :"
             android:textSize="19dp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
         <EditText
-            android:id="@+id/editTextLastName"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:hint="Last Name"
-            android:padding="8dp"
-            android:background="#ECECEC"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
+            android:id="@+id/editTextRelation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Relation"
+            android:layout_below="@id/spinnerSide"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -157,22 +125,22 @@
             android:id="@+id/textViewPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phone:"
+            android:text="Wedding Date:"
             android:textSize="19dp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
         <EditText
-            android:id="@+id/editTextPhone"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:hint="Phone Number"
-            android:padding="8dp"
-            android:background="#ECECEC"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
+            android:id="@+id/editTextWeddingDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Wedding Date"
+            android:layout_below="@id/editTextRelation"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:focusable="false"
+            android:onClick="showDatePickerDialog"/>
 
     </LinearLayout>
 
@@ -189,22 +157,20 @@
             android:id="@+id/textViewAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address:"
+            android:text="Guest Count:"
             android:textSize="19dp"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
         <EditText
-            android:id="@+id/editTextAddress"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="40dp"
-            android:hint="Address"
-            android:padding="8dp"
-            android:background="#ECECEC"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
+            android:id="@+id/editTextGuestCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Guest Count"
+            android:layout_below="@id/editTextWeddingDate"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
     </LinearLayout>
 
     <!-- Buttons -->

@@ -17,6 +17,15 @@
         android:theme="@style/Theme.TieTheKnot"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".client.CreateWeddingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".client.ShowWeddingActivity"
+            android:exported="false" />
+
         <activity
             android:name=".client.ClientProfileActivity"
             android:exported="false" />
