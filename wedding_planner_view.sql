@@ -86,3 +86,22 @@ JOIN
     weddingPlanSelections_Plans wps ON ws.selection_id = wps.selection_id
 JOIN
     plans p ON wps.plan_id = p.plan_id;
+    
+    
+    -- full plan
+
+CREATE VIEW full_plan_view AS
+SELECT
+    p.*,
+    v.service_type,
+    v.business_name AS business_name,
+    COUNT(r.review_id) AS count,
+    AVG(r.rating) AS rating
+FROM
+    plans p
+JOIN
+    vendors v ON p.vendor_id = v.vendor_id
+LEFT JOIN
+    reviews r ON p.plan_id = r.plan_id
+GROUP BY
+    p.plan_id, v.service_type;

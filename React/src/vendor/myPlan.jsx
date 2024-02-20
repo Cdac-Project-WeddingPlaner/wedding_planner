@@ -1,40 +1,55 @@
+
 //Srusthi
+import React, { useState, useEffect } from 'react';
 
-import React, {useState, useEffect} from 'react';
-import axios from "axios";
+import { useHistory } from 'react-router-dom';
 
-function MyPlan()
-{
+
+function MyPlan() {
+    
     const [plans, setPlans] = useState([]);
-
     const [vendor_images, setVendor_images] = useState([]);
-
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
+    const history = useHistory();
 
     useEffect(() => {
-        axios.get('http://localhost:7777/wedding/vendor/${plans.vendor_id') 
-        .then(response => {
-            setPlans(response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching plans: ', error);
-        });
+        const fetchPlans = async () => {
+          try {
+            const response = await fetch("http://localhost:7777/plans");
+            const data = await response.json();
+            setPlans(data || []);
+          } catch (error) {
+            console.error('Error fetching plans:', error);
+          }
+        };
+        
+        const fetchImages = async () => {
+            try {
+              const response = await fetch("http://localhost:7777/vendor_images");
+              const data = await response.json();
+              setPlans(data || []);
+            } catch (error) {
+              console.error('Error fetching plans:', error);
+            }
+          };
+        
+        fetchImages();
+        fetchPlans();
+      }, []);
 
-        axios.get('http://localhost:7777/wedding/vendor/${plans.vendor_id') 
-        .then(response => {
-            setVendor_images(response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching images: ', error);
+      const handleRowClick = (vendor_id) => {
+        history.push({
+            pathname: '/vendor/my-plans',
+            state:{vendor_id:vendor_id}
         });
-    },[token]);
+    }
 
-    return (
+
+      return (
         <center>
             <div className='myPlan'>
                 
                 {plans.map((plan, index) => (
-                    <div key={index} className='plan'>
+                    <div key={index} className='plan' onClick={()=> handleRowClick(plan.vendor_id)}>
                         <h2 className='title'>{plan.title}</h2>
                         <div className='pp'>
                             <img src={vendor_images.image_url} alt='Pic'/>
@@ -58,5 +73,4 @@ function MyPlan()
         </center>
     );
 };
-
 export default MyPlan;

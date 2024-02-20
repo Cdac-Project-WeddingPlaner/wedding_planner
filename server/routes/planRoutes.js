@@ -41,10 +41,7 @@ router.post('/', authenticateUser, (req, res) => {
 // Get all plans
 router.get('/', (req, res) => {
     const sql = `
-        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
-        FROM plans
-        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
-        GROUP BY plans.plan_id;
+    SELECT * From full_plan_view;
     `;
 
     pool.query(sql, (err, results) => {
@@ -68,11 +65,8 @@ router.get('/:plan_id', (req, res) => {
     const planId = req.params.plan_id;
 
     const sql = `
-        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
-        FROM plans
-        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
-        WHERE plans.plan_id = ?
-        GROUP BY plans.plan_id;
+    SELECT * From full_plan_view
+        WHERE plan_id = ?;
     `;
 
     pool.query(sql, [planId], (err, results) => {
@@ -149,11 +143,8 @@ router.delete('/:plan_id', authenticateUser, (req, res) => {
 // Get verified plans
 router.get('/v/v', (req, res) => {
     const sql = `
-        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
-        FROM plans
-        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
-        WHERE plans.is_verified = "verified"
-        GROUP BY plans.plan_id;
+    SELECT * From full_plan_view
+        WHERE is_verified = "verified";
     `;
 
     pool.query(sql, (err, results) => {
@@ -177,11 +168,8 @@ router.get('/vendor/:vendor_id', (req, res) => {
     const vendorId = req.params.vendor_id;
 
     const sql = `
-        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
-        FROM plans
-        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
-        WHERE plans.vendor_id = ?
-        GROUP BY plans.plan_id;
+    SELECT * From full_plan_view
+        WHERE vendor_id = ?;
     `;
 
     pool.query(sql, [vendorId], (err, results) => {
@@ -235,12 +223,8 @@ router.get('/service/:serviceType', (req, res) => {
     const serviceType = req.params.serviceType;
 
     const sql = `
-        SELECT plans.*, AVG(reviews.rating) AS rating, count(reviews.rating) AS count
-        FROM plans
-        LEFT JOIN reviews ON plans.plan_id = reviews.plan_id
-        JOIN vendors ON plans.vendor_id = vendors.vendor_id
-        WHERE vendors.service_type = ? AND plans.is_verified = "verified"
-        GROUP BY plans.plan_id;
+    SELECT * From full_plan_view
+        WHERE service_type = ? AND is_verified = "verified";
     `;
 
     pool.query(sql, [serviceType], (err, results) => {
