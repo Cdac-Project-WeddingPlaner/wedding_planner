@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+
 import './clientList.css'; // Import the CSS file
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
   const [weddingDates, setWeddingDates] = useState({});
+  const history = useHistory();
 
   useEffect(() => {
     const sessionToken = sessionStorage.getItem('token');
@@ -40,6 +43,12 @@ const ClientList = () => {
       });
   }, []);
 
+  const handleRowClick = (clientId) => 
+      history.push({
+        pathname: '/admin/client', // Target component's URL
+        state: { clientId: clientId } // Data to send
+      });
+
   return (
     <div>
       <div className="heading">
@@ -54,12 +63,14 @@ const ClientList = () => {
             <div className="col col-4">Status</div>
           </li>
           {clients.map((client, index) => (
+            <div key={index} onClick={() => handleRowClick(client.client_id)}> 
             <li className="table-row" key={index}>
               <div className="col col-1">{client.client_id}</div>
               <div className="col col-2">{`${client.first_name} ${client.middle_name} ${client.last_name}`}</div>
               <div className="col col-3">{weddingDates[client.client_id] || "Loading..."}</div>
               <div className="col col-4">Status Placeholder</div> {/* Placeholder for status */}
             </li>
+            </div>
           ))}
         </ul>
       </div>
