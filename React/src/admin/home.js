@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+import "./home.css";
 
 function Home() {
   const [data, setData] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     const sessionToken = sessionStorage.getItem('token');
@@ -47,6 +50,11 @@ function Home() {
     });
   }, []);
 
+  const handleShowClick = () => {
+    // Forward the page to the vendor page with vendorId as a URL parameter
+    history.push(`/admin/plan`);
+  };
+
   return (
     <div className='container'>
       <div className='table-responsive'>
@@ -67,7 +75,9 @@ function Home() {
                 <td>{item.vendor_name}</td>
                 <td>{item.type}</td>
                 <td>{item.plan}</td>
-                <td>{item.status}</td>
+                <td>
+                <input type='button' value='Show' className='btn btn-warning' onClick={() => handleShowClick} />
+                </td>
               </tr>
             ))}
           </tbody>

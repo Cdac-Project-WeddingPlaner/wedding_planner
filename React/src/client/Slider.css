@@ -40,7 +40,7 @@
   
   .slide {
     flex: 0 0 auto;
-    width: 400px; /* Increase slide width */
+    width: 600px; /* Increase slide width */
     height: 400px; /* Increase slide height */
     scroll-snap-align: start;
     padding: 1rem;
@@ -80,10 +80,13 @@
     width: 70%;
     height: 10%;
     text-align: center;
-    background-color: #9bffb1;
+    background-color: #f8a99c;
     color: #0c0b0b;
     position: relative;
   }
-
+  
+  .add-button:hover{
+    background-color: #f36c82;
+  }
 
   
