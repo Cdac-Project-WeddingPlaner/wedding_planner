@@ -86,6 +86,31 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.post('/check-email', (req, res) => {
+
+  
+    const { email } = req.body;
+  
+    // Check if the email already exists
+    pool.query('SELECT COUNT(*) AS emailCount FROM users WHERE email = ?', [email], (err, result) => {
+      if (err) {
+        console.error('Error checking email:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+  
+      const emailCount = result[0].emailCount;
+  
+      if (emailCount > 0) {
+        // Email already exists
+        return res.status(200).json({ exists: true });
+      } else {
+        // Email does not exist
+        return res.status(200).json({ exists: false });
+      }
+    });
+  });
+  
+
 // Register as a vendor route
 router.post('/register/vendor', [
     check('email').isEmail(),
@@ -160,7 +185,7 @@ router.post('/register/vendor', [
                         const user_id = userResults.insertId;
 
                         connection.query(
-                            'INSERT INTO vendors (user_id, service_type, business_name, contact_email, altarnet_number, business_address, logo_image_url, description, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                            'INSERT INTO vendors (user_id, service_type, business_name, contact_email, alternate_number, business_address, logo_image_url, description, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                             [user_id, service_type, business_name, contact_email, altarnet_number, business_address, logoImageName, description, 0],
                             (vendorError) => {
                                 if (vendorError) {
@@ -211,6 +236,8 @@ router.post('/register/client', [
 
     const avatarImagePath = req.file ? req.file.path : null;
 
+    const avatarImageName = avatarImagePath.filename; 
+
     // Start a transaction
     pool.getConnection((connectionError, connection) => {
         if (connectionError) {
@@ -260,7 +287,7 @@ router.post('/register/client', [
                 
                         connection.query(
                             'INSERT INTO clients (user_id, avatar_image_url) VALUES (?, ?)',
-                            [user_id, avatarImagePath],
+                            [user_id, avatarImageName],
                             (clientError, clientResults) => {
                                 if (clientError) {
                                     console.error(clientError);

@@ -19,20 +19,38 @@ router.post('/', authenticateUser, (req, res) => {
         return res.status(403).json({ error: 'Forbidden. Client access required.' });
     }
 
-    const { plan_id, client_id, review } = req.body;
+    const { user_id, plan_id, review } = req.body;
 
-    const sql = 'INSERT INTO reviews (plan_id, client_id, review) VALUES (?, ?, ?)';
+    // Find client_id from clients table using user_id
+    const findClientQuery = 'SELECT client_id FROM clients WHERE user_id = ?';
 
-    pool.query(sql, [plan_id, client_id, review], (err) => {
+    pool.query(findClientQuery, [user_id], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send({ error : 'Internal Server Error'});
-            return;
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
 
-        res.status(201).send({message : 'Review created successfully'});
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Client not found for the given user_id.' });
+        }
+
+        const client_id = results[0].client_id;
+
+        // Insert review into the database
+        const insertReviewQuery = 'INSERT INTO reviews (plan_id, client_id, review) VALUES (?, ?, ?)';
+
+        pool.query(insertReviewQuery, [plan_id, client_id, review], (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send({ error: 'Internal Server Error' });
+                return;
+            }
+
+            res.status(201).send({ message: 'Review created successfully' });
+        });
     });
 });
+
 
 
 // Get all reviews

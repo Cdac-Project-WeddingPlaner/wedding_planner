@@ -176,6 +176,91 @@ router.post('/plans/:user_id', authenticateUser, (req, res) => {
 });
 
 
+// PATCH /api/plans/approve/:selection_id/:plan_id
+router.patch('/approve/', authenticateUser, (req, res) => {
+
+    const { selection_id, plan_id } = req.body;
+
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
+    // Update status to "approved" in weddingPlanSelections_Plans table
+    const query = `
+        UPDATE weddingPlanSelections_Plans
+        SET status = 'approved'
+        WHERE selection_id = ? AND plan_id = ?;
+    `;
+
+    pool.query(query, [selection_id, plan_id], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Plan not found for the given selection.' });
+        }
+
+        res.status(200).json({ message: 'Plan status updated to approved successfully' });
+    });
+});
+
+// PATCH /api/plans/paid
+router.patch('/paid', authenticateUser, (req, res) => {
+
+    const { user_id, plan_id } = req.body;
+
+    if (req.user_type !== 'vendor') {
+        return res.status(403).json({ error: 'Forbidden. Client access required.' });
+    }
+
+    // Find selection_id for the given user_id
+    const selectionQuery = `
+        SELECT wp.selection_id
+        FROM weddingPlanSelections wp
+        JOIN weddingDetils wd ON wp.wd_id = wd.wd_id
+        JOIN clients c ON wd.client_id = c.client_id
+        JOIN users u ON c.user_id = u.user_id
+        WHERE u.user_id = ?;
+    `;
+
+    pool.query(selectionQuery, [user_id], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Wedding Plan Selection not found for the user.' });
+        }
+
+        const selection_id = results[0].selection_id;
+
+        // Update status to "paid" in weddingPlanSelections_Plans table
+        const updateQuery = `
+            UPDATE weddingPlanSelections_Plans
+            SET status = 'paid'
+            WHERE selection_id = ? AND plan_id = ?;
+        `;
+
+        pool.query(updateQuery, [selection_id, plan_id], (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            if (results.affectedRows === 0) {
+                return res.status(404).json({ error: 'Plan not found for the given selection.' });
+            }
+
+            res.status(200).json({ message: 'Plan status updated to paid successfully' });
+        });
+    });
+});
+
+
+
 // Delete Wedding Plan Selection by ID with all associated plans
 router.delete('/:selection_id', authenticateUser, (req, res) => {
     // Check if the authenticated user is a client

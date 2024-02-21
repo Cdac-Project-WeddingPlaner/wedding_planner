@@ -47,12 +47,6 @@ VALUES
     (4, 'Photography', 'Perfect Shots', 'vendor4@example.com', '9876543213', '101 Alley, Metro', 'logo4.jpg', 'Capturing your special moments with perfection.', 1),
     (5, 'Decoration', 'Elegant Decor', 'vendor5@example.com', '9876543214', '202 Lane, City', 'logo5.jpg', 'Transforming spaces into dreamy environments.', 1);
 
--- Insert sample data for Halls table(vendor)
-INSERT INTO halls (vendor_id, hall_name, capacity, address, rental_fee, amenities, is_verified)
-VALUES
-    (1, 'Dream Hall A', 200, '123 Street, City', 5000.00, 'Air Conditioning, Parking', 1),
-    (1, 'Elegant Hall B', 150, '202 Lane, City', 4500.00, 'Decoration, Sound System', 1);
-
 
 -- Insert sample data for Plans table(vendor-admin)
 INSERT INTO plans (vendor_id, title, description, price, is_verified)

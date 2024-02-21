@@ -62,19 +62,6 @@ CREATE TABLE admins (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
--- Create Halls table(vendor)
-CREATE TABLE halls (
-    hall_id INT AUTO_INCREMENT PRIMARY KEY,
-    vendor_id INT,
-    hall_name VARCHAR(100),
-    capacity INT,
-    address VARCHAR(255),
-    rental_fee DECIMAL(10, 2),
-    amenities TEXT,
-    is_verified BOOLEAN DEFAULT 0,
-    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
-);
 
 -- Create Plans Table(vendor-admin)
 CREATE TABLE plans (
