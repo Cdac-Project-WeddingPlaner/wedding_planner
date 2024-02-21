@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./profile.css";
 
 function ClientProfileScreen() {
+  const history = useHistory();
+
   const [user, setUser] = useState({
     client_id: "",
     first_name: "",
@@ -30,13 +32,16 @@ function ClientProfileScreen() {
   const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [editPersonalDetails, setEditPersonalDetails] = useState(false);
   const [editWeddingDetails, setEditWeddingDetails] = useState(false);
-
   const user_id = sessionStorage.getItem('user_id');
+
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userResponse = await axios.get(`http://localhost:7777/client/6`, {
+        // const userResponse = await axios.get(`http://localhost:7777/client/${user_id}`, {
+
           headers: { 'x-auth-token': token }
         });
         setUser(userResponse.data);
@@ -45,7 +50,9 @@ function ClientProfileScreen() {
       }
 
       try {
-        const weddingResponse = await axios.get('http://localhost:7777/wedding/client/1', {
+        // const weddingResponse = await axios.get(`http://localhost:7777/wedding/client/${user_id}`, {
+          const weddingResponse = await axios.get(`http://localhost:7777/wedding/client/1`, {
+
           headers: { 'x-auth-token': token }
         });
         setWeddingDetails(weddingResponse.data[0]);
@@ -55,7 +62,7 @@ function ClientProfileScreen() {
     };
 
     fetchData();
-  }, [token]); // Include token in the dependency array if it might change
+  }, [token,user_id]); // Include token in the dependency array if it might change
 
 
 
@@ -79,6 +86,19 @@ function ClientProfileScreen() {
       }));
     }
   };
+
+
+  const changePassword = async () => {
+
+    history.push({
+      pathname: '/changePass', // Target component's URL
+      state: { user_id: user_id } // Data to send
+    });
+
+    }
+
+
+  
 
   const formatDateForDatabase = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -315,9 +335,12 @@ function ClientProfileScreen() {
         <br />
 
         <button type="button" className="btn btn-primary-" onClick={onEdit} style={{ width: '100px', marginBottom: '20px' }}>Edit</button>
-        <button type="button" className="btn btn-success" onClick={handleSave} style={{ width: '100px', marginBottom: '20px' }}>
-          Save
+        <button type="button" className="btn btn-success" onClick={handleSave} style={{ width: '100px', marginBottom: '20px' }}>                   Save
         </button>
+        <button type="button" className="btn btn-secondary-" onClick={changePassword} style={{ width: '150px', marginBottom: '20px' }}>Change Password</button>
+
+
+        
       </center>
     </>
   );
