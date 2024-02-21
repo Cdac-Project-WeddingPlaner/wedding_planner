@@ -7,6 +7,8 @@ import img from "../resourses/profile.jpg";
 import "../client/profile.css";
 
 function VendorProfileScreen() {
+  const history = useHistory();
+
   const [vendor, setVendor] = useState({
     service_type: "",
     business_name: "",
@@ -43,10 +45,12 @@ function VendorProfileScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        var u1 = sessionStorage.getItem('user');
+        const vendorJson = JSON.parse(u1);
         const config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: 'http://localhost:7777/vendor/1',
+          url: `http://localhost:7777/vendor/${vendorJson.user_id}`,
           headers: { 'x-auth-token': token }
         };
 
@@ -58,11 +62,13 @@ function VendorProfileScreen() {
     };
 
     fetchData();
-  }, []);
+  }, [vendor.user_id]);
 
 
   const handleSave = async () => {
     try {
+      var u1 = sessionStorage.getItem('user');
+      const vendorJson = JSON.parse(u1);
       // Update vendor details
       const vendorDetails = {
         description: vendor.description,
@@ -79,7 +85,7 @@ function VendorProfileScreen() {
       };
 
       // Send PUT request to update vendor details
-      await axios.put('http://localhost:7777/vendor/1', vendorDetails, {
+      await axios.put(`http://localhost:7777/vendor/${vendorJson.user_id}`, vendorDetails, {
         headers: { 'x-auth-token': token }
       });
 

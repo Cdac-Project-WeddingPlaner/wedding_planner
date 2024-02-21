@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+
 import img from "../resourses/profile.jpg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../client/profile.css';
@@ -25,22 +27,29 @@ function Vendor() {
         phone_number: "",
     });
 
-
+    const history = useHistory();
     const [token, setToken] = useState(sessionStorage.getItem('token'));
     const [editVendor, setEditVendor] = useState(false);
     const [plans, setPlans] = useState([]);
 
+    const location = useLocation();
+    const vendorId = location.state.vendorId;
     const [reviews, setReviews] = useState([]);
 
-
+    const handleRowClick = (plan_id) => 
+    history.push({
+      pathname: `/admin/plan/${plan_id}`, // Target component's URL
+      state: { plan_id: plan_id } // Data to send
+    });
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const vendorConfig = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/vendor/1',
+                    url: `http://localhost:7777/vendor/${vendorId}`,
                     headers: { 'x-auth-token': token }
                 };
 
@@ -51,12 +60,17 @@ function Vendor() {
             }
         };
 
+
+        
+
         const fetchPlans = async () => {
+            
             try {
+                
                 const plansConfig = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/plans/vendor/1',
+                    url: `http://localhost:7777/plans/vendor/${vendorId}`,
                     headers: { 'x-auth-token': token }
                 };
 
@@ -69,6 +83,9 @@ function Vendor() {
 
         fetchData();
         fetchPlans();
+
+
+
     }, []);
 
 
@@ -116,23 +133,27 @@ function Vendor() {
             </div>
             <br /><br />
 
-            <div class="plans-container">
-                {plans.map((plan, index) => (
-                    <div class="plan-item" key={index}>
-                        <div class="plan-image">
-                            <img src={img} alt={plan.title}></img>
-                        </div>
-                        <div class="plan-details">
-                            <h3>{plan.title}</h3>
-                            <div class="plan-rating">
-                                <div class="star" ><img src={star} ></img></div>
-                                <h3 class="planRating">{plan.rating}</h3></div>
-                            <div class="plan-price">
-                                <h3>Rs. {plan.price}</h3></div>
-                        </div>
-                    </div>
-                ))}
+            <div className="plans-container">
+      {plans.map((plan, index) => (
+        <div className="plan-item" key={index} onClick={() => handleRowClick(plans.plan_id)}>
+          <div className="plan-image">
+            <img src={img} alt={plan.title} />
+          </div>
+          <div className="plan-details">
+            <h3>{plan.title}</h3>
+            <div className="plan-rating">
+              <div className="star">
+                <img src={star} alt="star" />
+              </div>
+              <h3 className="planRating">{plan.rating}</h3>
             </div>
+            <div className="plan-price">
+              <h3>Rs. {plan.price}</h3>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
 
             <br /><br />
 
@@ -157,7 +178,6 @@ function Vendor() {
                                 <h3 className="reviewsRating">{plan.rating}</h3>
                             </div>
                             <div className="plan-price">
-                                <h3>Rs. {plan.price}</h3>
                             </div>
                         </div>
                     </div>

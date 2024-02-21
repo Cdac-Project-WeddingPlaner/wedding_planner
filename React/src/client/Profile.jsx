@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -11,6 +10,7 @@ function ClientProfileScreen() {
   const history = useHistory();
 
   const [user, setUser] = useState({
+    user_id:"",
     client_id: "",
     first_name: "",
     middle_name: "",
@@ -32,27 +32,24 @@ function ClientProfileScreen() {
   const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [editPersonalDetails, setEditPersonalDetails] = useState(false);
   const [editWeddingDetails, setEditWeddingDetails] = useState(false);
-  const user_id = sessionStorage.getItem('user_id');
-
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userResponse = await axios.get(`http://localhost:7777/client/6`, {
-        // const userResponse = await axios.get(`http://localhost:7777/client/${user_id}`, {
-
+        var u1 = sessionStorage.getItem('user');
+        const userJson = JSON.parse(u1);
+        console.log(u1.user_id);
+        const userResponse = await axios.get(`http://localhost:7777/client/${userJson.user_id}`, {
           headers: { 'x-auth-token': token }
         });
         setUser(userResponse.data);
+        console.log(user);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
 
       try {
-        // const weddingResponse = await axios.get(`http://localhost:7777/wedding/client/${user_id}`, {
-          const weddingResponse = await axios.get(`http://localhost:7777/wedding/client/1`, {
-
+        const weddingResponse = await axios.get(`http://localhost:7777/wedding/client/${user.client_id}`, {
           headers: { 'x-auth-token': token }
         });
         setWeddingDetails(weddingResponse.data[0]);
@@ -62,15 +59,12 @@ function ClientProfileScreen() {
     };
 
     fetchData();
-  }, [token,user_id]); // Include token in the dependency array if it might change
-
-
+  }, [token, user.user_id]); // Include token in the dependency array if it might change
 
   const onEdit = () => {
     setEditPersonalDetails(prevState => !prevState);
     setEditWeddingDetails(prevState => !prevState);
   };
-  
 
   const handleChange = (e, type) => {
     const { name, value } = e.target;
@@ -87,18 +81,11 @@ function ClientProfileScreen() {
     }
   };
 
-
   const changePassword = async () => {
-
     history.push({
-      pathname: '/changePass', // Target component's URL
-      state: { user_id: user_id } // Data to send
+      pathname: '/changepassword', 
     });
-
-    }
-
-
-  
+  };
 
   const formatDateForDatabase = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -108,10 +95,8 @@ function ClientProfileScreen() {
     return `${year}-${month}-${day}`;
   };
 
-  // Inside your handleSave function
   const handleSave = async () => {
     try {
-      // Update wedding details
       const weddetail = {
         selected_side: weddingDetails.selected_side,
         bride_name: weddingDetails.bride_name,
@@ -121,12 +106,10 @@ function ClientProfileScreen() {
         guest_count: weddingDetails.guest_count
       };
 
-      // Send PUT request to update wedding details
-      await axios.put('http://localhost:7777/wedding/1', weddetail, {
+      await axios.put(`http://localhost:7777/wedding/${user.client_id}`, weddetail, {
         headers: { 'x-auth-token': token }
       });
 
-      // Update client information
       const updatedUser = {
         email: user.email,
         password: user.password,
@@ -136,21 +119,16 @@ function ClientProfileScreen() {
         address: user.address
       };
 
-      // Send PUT request to update user details
-      await axios.put('http://localhost:7777/client/6', updatedUser, {
+      await axios.put(`http://localhost:7777/client/${user.client_id}`, updatedUser, {
         headers: { 'x-auth-token': token }
       });
 
-      // Handle success
       alert('Data saved successfully!');
     } catch (error) {
       console.error('Error updating data:', error);
-      // Handle error
       alert('Error updating data. Please try again.');
     }
   };
-
-
 
   return (
     <>
@@ -323,7 +301,7 @@ function ClientProfileScreen() {
               <td>
                 <input
                   type="text"
-                  name="gest_count"
+                  name="guest_count"
                   value={weddingDetails.guest_count}
                   disabled={!editWeddingDetails}
                   onChange={(e) => handleChange(e, "wedding")}
@@ -335,10 +313,8 @@ function ClientProfileScreen() {
         <br />
 
         <button type="button" className="btn btn-primary-" onClick={onEdit} style={{ width: '100px', marginBottom: '20px' }}>Edit</button>
-        <button type="button" className="btn btn-success" onClick={handleSave} style={{ width: '100px', marginBottom: '20px' }}>                   Save
-        </button>
+        <button type="button" className="btn btn-success" onClick={handleSave} style={{ width: '100px', marginBottom: '20px' }}>Save</button>
         <button type="button" className="btn btn-secondary-" onClick={changePassword} style={{ width: '150px', marginBottom: '20px' }}>Change Password</button>
-
 
         
       </center>
