@@ -1,0 +1,16 @@
+.table-responsive {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    height: 450px;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../resourses/2.png')
+    
+
+  }
+  .th .tr{
+    background-color: antiquewhite;
+
+  }

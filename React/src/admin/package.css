@@ -1,15 +1,24 @@
 
 .table-responsive {
   overflow-x: auto;
+  
+  
 }
 
 .container {
   margin: 20px auto;
+  background-image: url('../resourses/2.png');
+  
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
+  
+  border: 1px solid;
+ 
+ 
+    
 }
 
 th, td {
@@ -19,7 +28,8 @@ th, td {
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color:   #f77fa5; 
+
 }
 
 .btn {
@@ -32,10 +42,15 @@ th {
 }
 
 .btn-warning {
-  background-color: #ffc107;
+  background-color: #f0ed48;
   color: #212529;
 }
 
 .btn-warning:hover {
-  background-color: #ffca2c;
+  background-color: #fcbd00;
 }
+
+.package-list {
+    background-color: rgb(250, 244, 245);
+  }
+  

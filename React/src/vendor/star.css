@@ -1,0 +1,16 @@
+.star {
+    width: 16px; /* Adjust star size as needed */
+    height: 16px; /* Adjust star size as needed */
+    fill: #0c0c09; /* Color of the filled star */
+  }
+  
+  .star:not(:last-child) {
+    margin-right: 4px; /* Adjust spacing between stars as needed */
+  }
+  
+  .star svg {
+    fill: none;
+    stroke: #ffd900; /* Color of the star outline */
+    stroke-width: 2; /* Adjust thickness as needed */
+  }
+  

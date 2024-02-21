@@ -1,0 +1,81 @@
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fdbfeb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .Review-body {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    height: 450px;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../resourses/2.png');
+    
+
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  textarea {
+   
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  button[type="submit"] {
+    background-color: #f86786;
+    color: hwb(0 100% 0%);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    /* padding-top: 5%; */
+    background-color: #fa017d;
+  }
+  
+  .toastify {
+    font-family: Arial, sans-serif;
+  }
+  
+  .toastify.toastify-top-right .toastify-content {
+    background-color: #28a745;
+  }
+  
+  .toastify.toastify-top-right .toastify-content.toastify-content-error {
+    background-color: #dc3545;
+  }
+  

@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import './Home.css';
-import { useHistory } from 'react-router-dom';
+//import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import profile from '../resourses/profile.jpg';
 
 function Home() {
 
     const [plans, setPlans] = useState([]);
-    const history = useHistory();
+    //const history = useHistory();
   
   
       // Fetch Plans data from backend API using Axios
@@ -30,9 +30,9 @@ function Home() {
         }, []);
         
         
-        const handleRowClick = (planId) => {
-          history.push(`/plans/${planId}`); // Redirect to plans details page
-        };
+        // const handleRowClick = (planId) => {
+        //   history.push(`/plans/${planId}`); // Redirect to plans details page
+        // };
 
 
 
@@ -55,7 +55,7 @@ function Home() {
            <td>
              <table >
                <tr >
-                 <td ><img src={profile} /></td>
+                 <td ><img src={profile} alt='profile' /></td>
                </tr>
              </table>
            </td>

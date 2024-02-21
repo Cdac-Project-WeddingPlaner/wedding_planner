@@ -1,10 +1,12 @@
 //Kajal
-// addReview.js
+
+//addReview.js
 
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './review.css';
 
 function AddReview() {
   const [formData, setFormData] = useState({
@@ -27,7 +29,7 @@ function AddReview() {
     try {
       const sessionToken = sessionStorage.getItem('token');
 
-      const response = await axios.post('http://localhost:7777/reviews', formData, {
+      const response = await axios.post('http://localhost:7777/review', formData, {
         headers: {
           'x-auth-token': sessionToken
         }
@@ -53,7 +55,7 @@ function AddReview() {
   };
 
   return (
-    <div>
+    <div class="Review-body">
       <h2>Add a Review</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -61,7 +63,7 @@ function AddReview() {
           <input type="text" id="plan_id" name="plan_id" value={formData.plan_id} onChange={handleChange} />
         </div>
         <div>
-          <label htmlFor="client_id">Client ID:</label>
+          <label htmlFor="client_id">User ID:</label>
           <input type="text" id="client_id" name="client_id" value={formData.client_id} onChange={handleChange} />
         </div>
         <div>
@@ -80,3 +82,7 @@ function AddReview() {
 }
 
 export default AddReview;
+
+
+
+

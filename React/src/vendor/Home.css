@@ -1,25 +1,10 @@
-/* Home.css */
-/* .container {
-  padding: auto;
-  display: flex;
-}  */
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  
-}
-
-.responsive-table th, .responsive-table td {
-  
-  text-align: center;  
-  border-bottom: 1px solid #ddd;
-}
-
-
-.responsive-table th {
-  background-color: #f073c0;
-}
+.container {
+  max-width: 100%;
+  background-image: url('../resourses/2.png');
+  font-weight: bold;
+  width: 80%;
+} 
 
 img{
   height: 40%;
