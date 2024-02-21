@@ -1,8 +1,8 @@
-//Akash
-
 import React, { useState } from "react";
 import axios from "axios";
 import { useHistory, Link } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import logo from "./resourses/logo.png";
 import "./utils/login.css";
 
@@ -30,21 +30,22 @@ function Login() {
 
         switch (response.data.user_type) {
           case 'admin':
+            toast.success('Logged in as admin');
             history.push("/admin/home");
             break;
           case 'vendor':
+            toast.success('Logged in as vendor');
             history.push("/vendor/home");
             break;
           case 'client':
+            toast.success('Logged in as client');
             history.push("/client/home");
             break;
           default:
+            toast.success('Logged in');
             history.push("/home");
             break;
         }
-
-
-
       } else {
         console.error("Unexpected response structure:", response);
         setError("Unexpected response structure");
