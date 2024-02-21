@@ -1,5 +1,4 @@
-//Srusthi
-
+//Srushti
 import React, { useState, useEffect } from 'react'; import axios from 'axios';
 import prof_img from './resourses/profile.jpg';
 import reviewPic1 from './resourses/reviewPic1.png';
@@ -47,7 +46,7 @@ function Home()
                 const config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/wedding/vendor/${plans.plan_id',
+                    url: 'http://localhost:7777/wedding/vendor/${reviews.plan_id',
                     headers: {'x-auth-token': token}
                 };
 

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Routes from './utils/Routes';
 import Navigation from './utils/Navigation';
 
-import logo from './resourses/logo.png';
+import logo from './resourses/logoe.png';
 
 import './utils/Landing.css';
 

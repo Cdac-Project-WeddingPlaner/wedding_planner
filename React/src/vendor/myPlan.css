@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+
+
+
+.myPlan-sc {
+  max-width: 800px;
+  margin: 0 auto;
+  
+}
+
+.plan-sc {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 20px;
+  cursor: pointer;
+
+}
+
+.plan:hover-sc {
+  background-color: #f0f0f0;
+}
+
+.title-sc {
+  margin-top: 0;
+  font-size: 30px;
+  font-family: 'Roboto Slab', serif;
+  font-weight: bold;
+  color: #b72d54;
+}
+
+.pp-sc {
+  align-items: center;
+  display: flex;
+  margin-top: 20px;
+  font-weight: bolder;
+}
+
+.pp-sc img {
+  max-width: 200px;
+  margin-right: 20px;
+}
+
+.desc-sc {
+  flex-grow: 1;
+}
+
+.desc-sc h4 {
+  margin-top: 0;
+}
+
+.desc-sc p {
+  margin-bottom: 10px;
+  font-size: large;
+}
+
+.done-sc p {
+  margin-right: 10px;
+  font-size: large;
+}
+
+.btn-sc {
+  display: flex;
+  align-items: center;
+}
+
+.btn-sc button {
+  margin-right: 10px;
+  background-color: #b72d54;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-sc button:hover {
+  background-color: #f46499;
+}
+
+.approve-sc {
+  color: green;
+  margin-left: 50px;
+  margin-top: 10px;
+}
+
+.bg-vendor-my-plans {
+  background-color: #ffe9e3;
+}

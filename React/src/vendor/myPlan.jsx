@@ -1,76 +1,83 @@
-
-//Srusthi
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import picz from '../resourses/reviewPic1.png';
 
+import './myPlan.css';
 
 function MyPlan() {
-    
     const [plans, setPlans] = useState([]);
-    const [vendor_images, setVendor_images] = useState([]);
+    const [vendorImages, setVendorImages] = useState([]);
     const history = useHistory();
 
+    // Fetch vendor data from backend API using Axios
     useEffect(() => {
-        const fetchPlans = async () => {
-          try {
-            const response = await fetch("http://localhost:7777/plans");
-            const data = await response.json();
-            setPlans(data || []);
-          } catch (error) {
-            console.error('Error fetching plans:', error);
-          }
-        };
-        
-        const fetchImages = async () => {
-            try {
-              const response = await fetch("http://localhost:7777/vendor_images");
-              const data = await response.json();
-              setPlans(data || []);
-            } catch (error) {
-              console.error('Error fetching plans:', error);
+        const sessionToken = sessionStorage.getItem('token');
+
+        axios.get('http://localhost:7777/plans', {
+            headers: {
+                'x-auth-token': sessionToken // No need to wrap sessionToken in `${}`
             }
-          };
-        
-        fetchImages();
-        fetchPlans();
-      }, []);
-
-      const handleRowClick = (vendor_id) => {
-        history.push({
-            pathname: '/vendor/my-plans',
-            state:{vendor_id:vendor_id}
+        })
+        .then(response => {
+            setPlans(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching plans:', error);
         });
-    }
+    }, []);
 
+    const handleRowClick = (plan) => {
+        history.push({
+            pathname: '/vendor/edit-plan',
+            state: { plan: plan }
+        });
+    };
 
-      return (
+    const handleDelete = (planId) => {
+        axios.delete(`http://localhost:7777/plans/${planId}`, {
+            headers: {
+                'x-auth-token': sessionStorage.getItem('token')
+            }
+        })
+        .then(response => {
+            // Filter out the deleted plan from the plans array
+            setPlans(plans.filter(plan => plan._id !== planId));
+        })
+        .catch(error => {
+            console.error('Error deleting plan:', error);
+        });
+    };
+
+    return (
         <center>
-            <div className='myPlan'>
-                
-                {plans.map((plan, index) => (
-                    <div key={index} className='plan' onClick={()=> handleRowClick(plan.vendor_id)}>
-                        <h2 className='title'>{plan.title}</h2>
-                        <div className='pp'>
-                            <img src={vendor_images.image_url} alt='Pic'/>
-                            <div className='desc'>
-                                <h4>Description</h4>
-                                <p>{plan.description}</p>
-                                <div className='done'>
-                                    <p>Done: </p>
-                                    <p>Price: {plan.price}</p>
-                                </div>
-                                <div className='btn'>
-                                    <button>Edit</button>
-                                    <button>Delete</button>
-                                    <button>Approved</button>
+            <div className='bg-vendor-my-plans'>
+                <div className='myPlan-sc'>
+                    {plans.map((plan, index) => (
+                        <div key={index} className='plan-sc' >
+                            <div className='title-sc'>{plan.title}</div>
+                            <div className='pp-sc'>
+                                <img src={picz} alt='Pic'/>
+                                <div className='desc-sc'>
+                                    <p>{plan.description}</p>
+                                    <div className='done-sc'>
+                                        <div>Price: {plan.price}</div>
+                                    </div>
+                                    <div className='btn-sc'>
+                                        <div key={index} onClick={() => handleRowClick(plan)}>
+                                            <button>Edit</button>
+                                        </div>
+                                        <button onClick={() => handleDelete(plan._id)}>Delete</button>
+                                        <p className='approve-sc'>Approved</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </center>
     );
 };
+
 export default MyPlan;

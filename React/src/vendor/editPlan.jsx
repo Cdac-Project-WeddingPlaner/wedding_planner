@@ -1,98 +1,82 @@
-//Srusthi
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
-import React, {useState, useEffect} from "react";
-import axios from "axios";
+function EditPlan({ location }) {
+    const initialPlan = location.state.plan;
+    const [plan, setPlan] = useState(initialPlan);
+    const history = useHistory();
 
-// import './editProfile.css';
+    // Handle input change
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setPlan({
+            ...plan,
+            [name]: value
+        });
+    };
 
-
-function EditPlan()
-{
-    const [plans, setPlans] = useState({
-        plan_id:"",
-        titile: "",
-        description: "",
-        price: "",
-
-    });
-
-    const [vendor_images, setVendor_images] = useState({
-        image_url: "",
-    });
-
-    const [reviews, setReviews] = useState({
-        review: "",
-    });
-
-    const [token, setToken] = useState(sessionStorage.getItem('token'));
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const config = {
-                    method: 'get',
-                    maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/vendor/2',
-                    headers: {'x-auth-token': token}
-                };
-
-                const response = await axios(config);
-                setPlans(response.data);
-            } catch (error){
-                console.error('Error fetching plan data: ', error);
-            }
-        };
-
-        fetchData();
-
-        const fetchImages = async () => {
-            try {
-                const config = {
-                    method: 'get',
-                    maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/wedding/vendor/${plans.plan_id',
-                    headers: {'x-auth-token': token}
-                };
-
-                const response = await axios(config);
-                setVendor_images(response.data);
-            } catch (error) {
-                console.error('Error fetching images: ',error);
-            }
-        };
-
-        fetchImages();
-
-        const fetchReviews = async () => {
-            try {
-                const config = {
-                    method: 'get',
-                    maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/wedding/vendor/${plans.plan_id',
-                    headers: {'x-auth-token': token}
-                };
-
-                const response = await axios(config);
-                setReviews(response.data);
-            } catch (error) {
-                console.error('Error fetching reviews: ',error);
-            }
-        };
-
-        fetchReviews();
-
-    },[token]);
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`http://localhost:7777/plans/${plan.plan_id}`, plan, {
+                headers: {
+                    'x-auth-token': sessionStorage.getItem('token')
+                }
+            });
+            console.log("Plan updated:", response.data);
+            // Redirect or perform any other actions upon successful update
+            history.push('/'); // Redirect to home page for example
+        } catch (error) {
+            console.error("Error updating plan:", error);
+            // Handle error, e.g., display an error message to the user
+        }
+    };
 
     return (
-        <center>
-            <div className="details">
-                <p className="titles">Edit Plan</p>
-                
-            </div>
-            <br/>
-            
-        </center>
-    )
+        <form onSubmit={handleSubmit}>
+            <center>
+                <div className='bg-vendor'>
+                    <div className='addplan'>
+                        <div></div>
+                        <h2 className='heading'>Edit Plan</h2>
+                    </div>
+                    <br/>
+                    <div>
+                        <h4 className='que'>Please provide a title for your plan:</h4>
+                        <br/>
+                        <textarea type='text' placeholder='Title' name='title' className='plantitle' value={plan.title} onChange={handleChange}></textarea>
+                        <br/>
+                    </div>
+                    <div>
+                        <br/>
+                        <h4 className='que'>Can you describe your plan in a few sentences?:</h4>
+                        <br/>
+                        <textarea type='text' placeholder='Description'  name='description' className='plandesc' value={plan.description} onChange={handleChange}></textarea>
+                        <br/>
+                    </div>
+                    <div>
+                        <br/>
+                        <h4 className='que'>Specify your plan price here:</h4>
+                        <br/>
+                        <input type='number' placeholder='Price' className='planprice' name='price' value={plan.price} onChange={handleChange}></input>
+                    </div>
+                    <br/>
+                    <br/>
+                    <button className='submit'>Save</button>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+            </center>
+        </form>
+    );
 }
 
 export default EditPlan;
