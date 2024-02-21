@@ -12,6 +12,7 @@ const ClientList = () => {
   useEffect(() => {
     const sessionToken = sessionStorage.getItem('token');
 
+
     // Fetch client data
     axios.get('http://localhost:7777/client', {
       headers: {
@@ -43,11 +44,13 @@ const ClientList = () => {
       });
   }, []);
 
-  const handleRowClick = (clientId) => 
+  const handleRowClick = (clientId,userId) => 
       history.push({
-        pathname: '/admin/client', // Target component's URL
-        state: { clientId: clientId } // Data to send
+          pathname: '/admin/client',
+          state: { clientId: clientId, userId: userId }
       });
+      
+     
 
   return (
     <div>
@@ -63,7 +66,7 @@ const ClientList = () => {
             <div className="col col-4">Status</div>
           </li>
           {clients.map((client, index) => (
-            <div key={index} onClick={() => handleRowClick(client.client_id)}> 
+            <div key={index} onClick={() => handleRowClick(client.client_id,client.user_id)}> 
             <li className="table-row" key={index}>
               <div className="col col-1">{client.client_id}</div>
               <div className="col col-2">{`${client.first_name} ${client.middle_name} ${client.last_name}`}</div>

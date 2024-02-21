@@ -1,5 +1,7 @@
 //Chirag
 import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
+
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import img from "../resourses/profile.jpg";
@@ -9,8 +11,12 @@ import './client.css'
 import '../admin/vendor.css';// import './clientList.css';
 
 function Client() {
+    const history = useHistory();
+    const location = useLocation();
+    const clientId = location.state.clientId;
+    const userId = location.state.userId;
     const [user, setUser] = useState({
-        client_id: "",
+        user_id:"",
         first_name: "",
         middle_name: "",
         last_name: "",
@@ -33,6 +39,8 @@ function Client() {
     const [editWeddingDetails, setEditWeddingDetails] = useState(false);
     const [plansData, setPlansData] = useState([]);
     useEffect(() => {
+        console.log("userId:", userId);
+        console.log("clientId:", clientId);
         const fetchData = async () => {
             try {
                 const userResponse = await axios.get(`http://localhost:7777/client/6`, {
@@ -44,7 +52,7 @@ function Client() {
             }
 
             try {
-                const weddingResponse = await axios.get('http://localhost:7777/wedding/client/1', {
+                const weddingResponse = await axios.get(`http://localhost:7777/wedding/client/${clientId}`, {
                     headers: { 'x-auth-token': token }
                 });
                 setWeddingDetails(weddingResponse.data[0]);
@@ -59,7 +67,7 @@ function Client() {
                 const plansConfig = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://localhost:7777/wedsel/client/1',
+                    url: `http://localhost:7777/wedsel/client/${clientId}`,
                     headers: { 'x-auth-token': token }
                 };
 
@@ -72,7 +80,7 @@ function Client() {
 
         fetchData();
         fetchPlans();
-    }, [token]);
+    }, [token],userId);
 
 
 
