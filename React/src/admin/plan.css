@@ -1,3 +1,4 @@
+/* Srushti */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
 
 
@@ -9,6 +10,15 @@
 
 body{
     background-color: white;
+}
+
+.bg-vendor {
+    background-image: url("../resourses/vendor-bg.jpg");
+    background-position: center center;
+    background-size: max(80vw, 120vw);
+   
+    position: relative;
+    background-repeat: no-repeat;
 }
 
 .addplan{
@@ -29,35 +39,18 @@ body{
     font-weight: bold;
 }
 
-.plantitle, .planprice, .planurl, .plandesc {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 15px;
-    resize: vertical;
-
+.plantitle, .planprice, .plandesc {
+    font-weight: bolder;
+    font-size: large;
+    border-width: 0cap;
+    box-shadow: none;
   }
 
 
 .que {
     font-size: 24px;
-}
-
-button{
-    position: relative;
-    margin:10px 60px;
-    padding: 8px 10px;
-    border-radius: 5px;
-    font-size: 18px;
-    background-color: #b72d54;
-    color: white;
-    border: 1px solid #ccc;
-    font-weight: bold;
-}
-
-.pre:hover, .upl:hover, .submit:hover {
-    background-color: #f76b8a;
+    color: #b72d54;
+    font-weight: bolder;
 }
 
 .bg-vendor {

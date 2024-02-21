@@ -56,33 +56,39 @@ function AddPlan()
         <>
         <form onSubmit={handleSubmit}>
         <center>
-            <div className='addplan'>
-                <div></div>
-                <h2 className='heading'>Add New Plan</h2>
+            <div className='bg-vendor'>
+                <div className='addplan'>
+                    <div></div>
+                    <br/>
+                    <br/>
+                    <h2 className='heading'>Add New Plan</h2>
+                </div>
+                <br/>
+                <br/>
+                <div>
+                    <h4 className='que'>Please provide a title for your plan:</h4>
+                    <br/>
+                    <textarea type='text' placeholder='Title' name='title' className='plantitle' value={plans.title} onChange={handleChange}></textarea>
+                    <br/>
+                </div>
+                <div>
+                    <h4 className='que'>Can you describe your plan in a few sentences?:</h4>
+                    <br/>
+                    <textarea type='text' placeholder='Description'  name='description' className='plandesc' value={plans.description} onChange={handleChange}></textarea>
+                    <br/>
+                </div>
+                <div>
+                    <h4 className='que'>Specify your plan price here:</h4>
+                    <br/>
+                    <input type='number' placeholder='Price' className='planprice' name='price' value={plans.price} onChange={handleChange}></input>
+                    <br/>
+                </div>
+                <br/>
+                <br/>
+                <button className='submit'>Submit</button>
+                <br/>
+                <br/>
             </div>
-            <br/>
-            <div>
-                <h4 className='que'>Please provide a title for your plan:</h4>
-                <textarea type='text' placeholder='Title' name='title' className='plantitle' value={plans.title} onChange={handleChange}></textarea>
-            </div>
-            <div>
-                <h4 className='que'>Can you describe your plan in a few sentences?:</h4>
-                <textarea type='text' placeholder='Description'  name='description' className='plandesc' value={plans.description} onChange={handleChange}></textarea>
-            </div>
-            <div>
-                <h4 className='que'>Specify your plan price here:</h4>
-                <input type='number' placeholder='Price' className='planprice' name='price' value={plans.price} onChange={handleChange}></input>
-            </div>
-            <div>
-                <h4 className='que'>Upload images for your plan:</h4>
-                <input type='url' placeholder='Image Url' className='planurl' onChange={handleFileChange}  disabled={!vendor_images || !plans.title || plans.description|| plans.price}></input>
-            </div>
-            <br/>
-            <button className='pre'>Preview</button>
-            <button className='upl'>Upload</button>
-            <br/>
-            <br/>
-            <button className='submit'>Submit</button>
         </center>
         </form>
         </>
