@@ -1,56 +1,121 @@
-
-.table-responsive {
-  overflow-x: auto;
-  
-  
-}
-
-.container {
-  margin: 20px auto;
-  background-image: url('../resourses/2.png');
-  
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  
-  border: 1px solid;
- 
- 
-    
-}
-
-th, td {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background-color:   #f77fa5; 
-
-}
-
-.btn {
-  cursor: pointer;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+.heading {
   text-align: center;
-  text-decoration: none;
+  margin-bottom: 20px;
 }
 
-.btn-warning {
-  background-color: #f0ed48;
-  color: #212529;
+.pack{
+  text-align: center;
+  margin-bottom: 20px;
+  width: 100%;
+
 }
 
-.btn-warning:hover {
-  background-color: #fcbd00;
+.collapsible-section {
+  margin-bottom: 20px;
 }
 
-.package-list {
-    background-color: rgb(250, 244, 245);
+.collapsible-header {
+  background-color: #ffffff;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.collapsible-header:hover {
+  background-color: #e0e0e0;
+}
+
+.collapsible-header h2 {
+  background-color: #fcc5bc;
+  font-family: cursive;
+  text-align: center;
+  bottom: 0;
+  font-size: 30px;
+  width: 100%;
+  margin: 0;
+  font-weight: bold;
+  color: #640202;
+  margin: 0;
+}
+
+.plan {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.plan h3 {
+  margin-top: 0;
+}
+
+.plan h4 {
+  margin-bottom: 5px;
+}
+
+.plan button {
+  background-color: #f3b794;
+  color: #fff;
+  border: none;
+  padding: 5px 5px;
+  cursor: pointer;
+}
+
+.plan button:hover {
+  background-color: #f37e69;
+}
+
+/* Customize arrow icons */
+svg {
+  width: 20px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.collapsible-section:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+
+.collapsible-section:last-child .collapsible-header {
+  border-bottom: none;
+}
+
+.plan {
+    flex: 0 0 auto;
+    width: 97%; /* Increase slide width */
+    height: 150; /* Increase slide height */
+    padding: 1rem;
+    margin-right: 1rem;
+    background-color: #fae2da;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .planimage {
+    width: 50%;
+    height: 250px;
+    background-color: #f0f0f0;
+    display:flex ;
+    margin: 10px;
+  }
+
+  .plan-details {
+    flex: 1;
+    padding: 20px;
   }
   
+  .plan-details h3{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+  }

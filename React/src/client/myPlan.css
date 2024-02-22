@@ -264,10 +264,6 @@
     font-weight: bold;
   }
 
-  .action h5{
-    font-weight: bold;
-    font-size: 20px;
-  }
 
   .total {
     background-color: #f36c82;
@@ -297,4 +293,20 @@
 
   .pay-button:hover{
     background-color: #000294;
+  }
+
+  .remove button {
+    background-color: #f8a99c;
+    height: 100%;
+    font-weight: bolder;
+    width: 30%;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .remove h5{
+    font-weight: bold;
+    font-size: 20px;
   }

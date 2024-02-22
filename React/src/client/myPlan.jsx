@@ -4,6 +4,8 @@ import "./myPlan.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import imgSrc from "../resourses/img.jpg";
+
 
 function MyPlan() {
   const [weddingPlans, setWeddingPlans] = useState([]);
@@ -205,7 +207,7 @@ function MyPlan() {
                   <th className="sub-heading">Hall</th>
                   <td>{plan.title}</td>
                   <td>{plan.price}</td>
-                  <td>{plan.date}</td>
+                  <td>{new Date(new Date(plan.date).getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]}</td>
                   <td>{plan.status}</td>
                   <td>{renderActionButtons(plan.status, plan.plan_id)}</td>
                 </tr>
@@ -228,7 +230,7 @@ function MyPlan() {
                   <th className="sub-heading">Catering</th>
                   <td>{plan.title}</td>
                   <td>{plan.price}</td>
-                  <td>{plan.date}</td>
+                  <td>{new Date(new Date(plan.date).getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]}</td>
                   <td>{plan.status}</td>
                   <td>{renderActionButtons(plan.status, plan.plan_id)}</td>
                 </tr>
@@ -252,7 +254,7 @@ function MyPlan() {
                   <th className="sub-heading">Decoration</th>
                   <td>{plan.title}</td>
                   <td>{plan.price}</td>
-                  <td>{plan.date}</td>
+                  <td>{new Date(new Date(plan.date).getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]}</td>
                   <td>{plan.status}</td>
                   <td>{renderActionButtons(plan.status, plan.plan_id)}</td>
                 </tr>
@@ -276,7 +278,7 @@ function MyPlan() {
                   <th className="sub-heading">Music</th>
                   <td>{plan.title}</td>
                   <td>{plan.price}</td>
-                  <td>{plan.date}</td>
+                  <td>{new Date(new Date(plan.date).getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]}</td>
                   <td>{plan.status}</td>
                   <td>{renderActionButtons(plan.status, plan.plan_id)}</td>
                 </tr>
@@ -300,7 +302,7 @@ function MyPlan() {
                   <th className="sub-heading">Photography</th>
                   <td>{plan.title}</td>
                   <td>{plan.price}</td>
-                  <td>{plan.date}</td>
+                  <td>{new Date(new Date(plan.date).getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]}</td>
                   <td>{plan.status}</td>
                   <td>{renderActionButtons(plan.status, plan.plan_id)}</td>
                 </tr>
@@ -339,12 +341,12 @@ function MyPlan() {
               .filter((plan) => plan.service_type === "Hall")
               .map((plan) => (
                 <div className="plan" key={plan.plan_id}>
-                  <img src="img.jpg" className="planimage" />
+                  <img src={imgSrc} className="planimage" />
                   <div className="hall-details">
                     <h3>Hall Name : {plan.title}</h3>
                     <h3>Price : {plan.price}</h3>
                     <h3>Status : {plan.status}</h3>
-                    <div className="action">
+                    <div className="remove">
                       {renderActionButtons(plan.status, plan.plan_id)}
                     </div>
                   </div>
@@ -358,7 +360,7 @@ function MyPlan() {
               <div className="slides" id="slide-container">
                 {plans.map((plan) => (
                   <div className="slide" key={plan.plan_id}>
-                    <img src="img.jpg" className="image" />
+                    <img src={imgSrc} className="image" />
                     <h3>{plan.title}</h3>
                     <h4>{plan.description}</h4>
                     <h4>Price : {plan.price} /-</h4>
@@ -389,12 +391,12 @@ function MyPlan() {
               .filter((plan) => plan.service_type === "Catering")
               .map((plan) => (
                 <div className="plan" key={plan.plan_id}>
-                  <img src="img.jpg" className="planimage" />
+                  <img src={imgSrc} className="planimage" />
                   <div className="hall-details">
                     <h3>Catering Name : {plan.title}</h3>
                     <h3>Price : {plan.price}</h3>
                     <h3>Status : {plan.status}</h3>
-                    <div className="action">
+                    <div className="remove">
                       {renderActionButtons(plan.status, plan.plan_id)}
                     </div>
                   </div>
@@ -408,7 +410,7 @@ function MyPlan() {
               <div className="slides" id="slide-container">
                 {caterings.map((catering) => (
                   <div className="slide" key={catering.plan_id}>
-                    <img src="img.jpg" className="image" />
+                    <img src={imgSrc} className="image" />
                     <h3>{catering.title}</h3>
                     <h4>{catering.description}</h4>
                     <h4>Price : {catering.price} /-</h4>
@@ -439,12 +441,12 @@ function MyPlan() {
               .filter((plan) => plan.service_type === "Decoration")
               .map((plan) => (
                 <div className="plan" key={plan.plan_id}>
-                  <img src="img.jpg" className="planimage" />
+                  <img src={imgSrc} className="planimage" />
                   <div className="hall-details">
                     <h3>Decoration Name : {plan.title}</h3>
                     <h3>Price : {plan.price}</h3>
                     <h3>Status : {plan.status}</h3>
-                    <div className="action">
+                    <div className="remove">
                       {renderActionButtons(plan.status, plan.plan_id)}
                     </div>
                   </div>
@@ -458,7 +460,7 @@ function MyPlan() {
               <div className="slides" id="slide-container">
                 {decorations.map((decoration) => (
                   <div className="slide" key={decoration.plan_id}>
-                    <img src="img.jpg" className="image" />
+                    <img src={imgSrc} className="image" />
                     <h3>{decoration.title}</h3>
                     <h4>{decoration.description}</h4>
                     <h4>Price : {decoration.price} /-</h4>
@@ -489,12 +491,12 @@ function MyPlan() {
               .filter((plan) => plan.service_type === "Music")
               .map((plan) => (
                 <div className="plan" key={plan.plan_id}>
-                  <img src="img.jpg" className="planimage" />
+                  <img src={imgSrc} className="planimage" />
                   <div className="hall-details">
                     <h3>Music Name : {plan.title}</h3>
                     <h3>Price : {plan.price}</h3>
                     <h3>Status : {plan.status}</h3>
-                    <div className="action">
+                    <div className="remove">
                       {renderActionButtons(plan.status, plan.plan_id)}
                     </div>
                   </div>
@@ -508,7 +510,7 @@ function MyPlan() {
               <div className="slides" id="slide-container">
                 {musics.map((music) => (
                   <div className="slide" key={music.plan_id}>
-                    <img src="img.jpg" className="image" />
+                    <img src={imgSrc} className="image" />
                     <h3>{music.title}</h3>
                     <h4>{music.description}</h4>
                     <h4>Price : {music.price} /-</h4>
@@ -539,12 +541,12 @@ function MyPlan() {
               .filter((plan) => plan.service_type === "Photography")
               .map((plan) => (
                 <div className="plan" key={plan.plan_id}>
-                  <img src="img.jpg" className="planimage" />
+                  <img src={imgSrc} className="planimage" />
                   <div className="hall-details">
                     <h3>Photography Name : {plan.title}</h3>
                     <h3>Price : {plan.price}</h3>
                     <h3>Status : {plan.status}</h3>
-                    <div className="action">
+                    <div className="remove">
                       {renderActionButtons(plan.status, plan.plan_id)}
                     </div>
                   </div>

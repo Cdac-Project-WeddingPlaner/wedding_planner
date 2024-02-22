@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "./Slider.css"; // Import CSS file
+import imgSrc from "../resourses/img.jpg";
 
 function Home() {
   const [plans, setPlans] = useState([]);
@@ -125,7 +126,7 @@ const addPlan = (planId) => {
     .then((planResponse) => {
       // Handle success
       console.log("Plan added successfully:", planResponse.data);
-      fetchWeddingPlans(user_id);
+      
       toast.success("Plan added successfully");
 
     })
@@ -134,6 +135,49 @@ const addPlan = (planId) => {
       toast.error("Error adding plan");
     });
 };
+
+const addPack = (packageId) => {
+  // Fetch the plans associated with the selected package
+  axios.get(`http://localhost:7777/packages/${packageId}`)
+    .then((response) => {
+      const packageData = response.data;
+      const packagePlans = packageData.plans;
+
+      // Check if any of the plans in the package already exist in the user's selection
+      const existingPlans = packagePlans.filter(plan => userPlans.some(userPlan => userPlan.plan_id === plan.plan_id));
+      if (existingPlans.length > 0) {
+        toast.error("Some plans in the package are already added");
+        return;
+      }
+
+      // Add each plan in the package to the wedding plan selection
+      packagePlans.forEach((plan) => {
+        axios.post(`http://localhost:7777/wedsel/plans/${user_id}`, {
+          plan_id: plan.plan_id,
+          date: currentDate,
+          time: currentTime, // Replace with the desired time
+        }, {
+          headers: {
+            "x-auth-token": sessionToken,
+          }
+        })
+        .then((planResponse) => {
+          // Handle success
+          console.log("Plan added successfully:", planResponse.data);
+          toast.success("Plan added successfully");
+        })
+        .catch((planError) => {
+          console.error("Error adding plan:", planError);
+          toast.error("Error adding plan");
+        });
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching package plans:", error);
+      toast.error("Error fetching package plans");
+    });
+};
+
 
   return (
     <div>
@@ -148,7 +192,7 @@ const addPlan = (planId) => {
         <div className="slides" id="slide-container">
           {plans.map((plan) => (
             <div className="slide" key={plan.plan_id}>
-              <img src="img.jpg" className="image" />
+              <img src={imgSrc} className="image" />
               <h3>{plan.title}</h3>
               <h4>{plan.description}</h4>
               <h4>Price : {plan.price} /-</h4>
@@ -177,7 +221,7 @@ const addPlan = (planId) => {
         <div className="slides" id="slide-container">
           {caterings.map((catering) => (
             <div className="slide" key={catering.plan_id}>
-              <img src="img.jpg" className="image" />
+              <img src={imgSrc} className="image" />
               <h3>{catering.title}</h3>
               <h4>{catering.description}</h4>
               <h4>Price : {catering.price} /-</h4>
@@ -206,7 +250,7 @@ const addPlan = (planId) => {
         <div className="slides" id="slide-container">
           {musics.map((music) => (
             <div className="slide" key={music.plan_id}>
-              <img src="img.jpg" className="image" />
+              <img src={imgSrc} className="image" />
               <h3>{music.title}</h3>
               <h4>{music.description}</h4>
               <h4>Price : {music.price} /-</h4>
@@ -235,7 +279,7 @@ const addPlan = (planId) => {
         <div className="slides" id="slide-container">
           {photography.map((photo) => (
             <div className="slide" key={photo.plan_id}>
-              <img src="img.jpg" className="image" />
+              <img src={imgSrc} className="image" />
               <h3>{photo.title}</h3>
               <h4>{photo.description}</h4>
               <h4>Price : {photo.price} /-</h4>
@@ -264,7 +308,7 @@ const addPlan = (planId) => {
         <div className="slides" id="slide-container">
           {decorations.map((decoration) => (
             <div className="slide" key={decoration.plan_id}>
-              <img src="img.jpg" className="image" />
+              <img src={imgSrc} className="image" />
               <h3>{decoration.title}</h3>
               <h4>{decoration.description}</h4>
               <h4>Price : {decoration.price} /-</h4>
@@ -293,13 +337,13 @@ const addPlan = (planId) => {
         <div className="slides" id="slide-container">
           {packages.map((pack) => (
             <div className="slide" key={pack.package_id}>
-              <img src="img.jpg" className="image" />
+              <img src={imgSrc} className="image" />
               <h3>{pack.packagename}</h3>
               {/* <h4>{pack.description}</h4>
             <h4>Price : {pack.price} /-</h4> */}
               <button
                 className="add-button"
-                onClick={() => addPlan(pack.plan_id)}>
+                onClick={() => addPack(pack.package_id)}>
                 Add
               </button>{" "}
             </div>
