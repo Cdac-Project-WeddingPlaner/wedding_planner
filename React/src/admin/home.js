@@ -12,41 +12,16 @@ function Home() {
   useEffect(() => {
     const sessionToken = sessionStorage.getItem('token');
 
-    axios.get('http://localhost:7777/vendor', {
+    axios.get('http://localhost:7777/plans', {
       headers: {
         'x-auth-token': sessionToken
       }
     })
-    .then(vendorsResponse => {
-      const vendors = vendorsResponse.data;
-
-      axios.get('http://localhost:7777/plans', {
-        headers: {
-          'x-auth-token': sessionToken
-        }
-      })
-      .then(plansResponse => {
-        const plans = plansResponse.data;
-
-        // Combine vendor and plan data
-        const combinedData = vendors.map(vendor => {
-          const matchingPlan = plans.find(plan => plan.vendor_id === vendor.vendor_id);
-          return {
-            vendor_name: vendor.business_name,
-            type: vendor.service_type,
-            plan: matchingPlan ? matchingPlan.title : '',
-            status: matchingPlan ? matchingPlan.is_verified : 'Not Available'
-          };
-        });
-
-        setData(combinedData);
-      })
-      .catch(error => {
-        console.error('Error fetching plans:', error);
-      });
+    .then(response => {
+      setData(response.data);
     })
     .catch(error => {
-      console.error('Error fetching vendors:', error);
+      console.error('Error fetching package and plans:', error);
     });
   }, []);
 
@@ -71,12 +46,12 @@ function Home() {
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{item.vendor_name}</td>
-                <td>{item.type}</td>
-                <td>{item.plan}</td>
+                <td>{item.plan_id}</td>
+                <td>{item.vendor_id}</td>
+                <td>{item.title}</td>
+                <td>{item.description}</td>
                 <td>
-                <input type='button' value='Show' className='btn btn-warning' onClick={() => handleShowClick} />
+                <input type='button' value={item.is_verified} className='btn btn-warning' onClick={() => handleShowClick} />
                 </td>
               </tr>
             ))}
